@@ -86,6 +86,7 @@ model Order {
   totalPrice     Float
   paymentMethod  PaymentMethod
   paymentStatus  PaymentStatus    @default(UNPAID)
+  paymobOrderId  Int?
   orderItems     OrderItem[]
   createdAt      DateTime         @default(now())
   OrderStatusLog OrderStatusLog[]

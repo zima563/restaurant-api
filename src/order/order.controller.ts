@@ -67,4 +67,10 @@ export class OrderController {
   ) {
     return this.orderService.updatePaymentStatus(+id, dto.status);
   }
+
+  @Post(':id/pay')
+  @UseGuards(JwtAuthGuard)
+  payOrder(@Request() req, @Param('id') id: string) {
+    return this.orderService.pay(+id, req.user.userId);
+  }
 }

@@ -2,66 +2,31 @@ import {
   Controller,
   Post,
   Body,
-  Headers,
+  HttpCode,
   BadRequestException,
 } from '@nestjs/common';
-import * as crypto from 'crypto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PaymobService } from './paymob.service';
 
 @Controller('paymob')
 export class PaymobController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private paymobService: PaymobService) {}
 
   @Post('callback')
-  async handleCallback(@Body() body: any, @Headers('hmac') hmac: string) {
-    const secret = process.env.PAYMOB_HMAC_SECRET!;
+  @HttpCode(200)
+  async handleCallback(@Body() body: any) {
+    const isValid = this.paymobService.verifyHmac(body); // 👈 ابعت body مش obj
+    console.log('🔍 isValid:', isValid);
+    console.log('📦 Full Callback body:', body);
 
-    // 1. جمع الحقول المطلوبة بنفس ترتيب Paymob
-    const fields = [
-      'amount_cents',
-      'created_at',
-      'currency',
-      'error_occured',
-      'has_parent_transaction',
-      'id',
-      'integration_id',
-      'is_3d_secure',
-      'is_auth',
-      'is_capture',
-      'is_refunded',
-      'is_standalone_payment',
-      'is_voided',
-      'order',
-      'owner',
-      'pending',
-      'source_data_pan',
-      'source_data_sub_type',
-      'source_data_type',
-      'success',
-    ];
-
-    const concatenated = fields.map((f) => body[f] ?? '').join('');
-    const computedHmac = crypto
-      .createHmac('sha512', secret)
-      .update(concatenated)
-      .digest('hex');
-
-    if (computedHmac !== hmac) {
-      throw new BadRequestException('Invalid HMAC');
+    if (!isValid) {
+      throw new BadRequestException('Invalid HMAC signature');
     }
 
-    // 2. تحديث الطلب حسب نجاح الدفع
-    const merchantOrderId = body.order?.merchant_order_id;
+    const orderId = body.obj.order?.merchant_order_id ?? body.obj.order?.id;
+    const success = body.obj.success;
 
-    const isSuccess = body.success === true || body.success === 'true';
+    await this.paymobService.updateOrderPaymentStatus(Number(orderId), success);
 
-    await this.prisma.order.update({
-      where: { id: merchantOrderId },
-      data: {
-        paymentStatus: isSuccess ? 'PAID' : 'FAILED',
-      },
-    });
-
-    return { message: 'Webhook processed' };
+    return { message: 'Callback received' };
   }
 }

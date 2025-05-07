@@ -16,6 +16,7 @@ import { AddressModule } from './address/address.module';
 import { PaymobController } from './paymob/paymob.controller';
 import { PaymobModule } from './paymob/paymob.module';
 import { NotificationModule } from './notification/notification.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -30,6 +31,9 @@ import { NotificationModule } from './notification/notification.module';
     AddressModule,
     PaymobModule,
     NotificationModule,
+    ConfigModule.forRoot({
+      isGlobal: true, // 👈 يخليها متاحة في كل المشروع
+    }),
   ],
   controllers: [AppController, NotificationController, PaymobController],
   providers: [AppService, ImageService, NotificationService],

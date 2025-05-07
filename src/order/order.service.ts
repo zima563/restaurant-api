@@ -3,6 +3,7 @@ import {
   NotFoundException,
   BadRequestException,
   ForbiddenException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -178,7 +179,7 @@ export class OrderService {
   async pay(orderId: number, userId: number) {
     const order = await this.prisma.order.findUnique({
       where: { id: orderId },
-      include: { address: true, user: true },
+      include: { user: true, address: true },
     });
 
     if (!order || order.userId !== userId) {
@@ -186,24 +187,36 @@ export class OrderService {
     }
 
     const token = await this.paymobService.authenticate();
-    const paymobOrderId = await this.paymobService.createOrder(
-      token,
-      order.totalPrice * 100,
-      order.id,
-    );
+
+    let paymobOrderId = order.paymobOrderId;
+
+    // ✅ لو مفيش order id محفوظ، اعمله وسجله
+    if (!paymobOrderId) {
+      paymobOrderId = await this.paymobService.createOrder(
+        token,
+        order.totalPrice * 100,
+        order.id,
+      );
+
+      // احفظه في الـ DB علشان متكرروش تاني
+      await this.prisma.order.update({
+        where: { id: order.id },
+        data: { paymobOrderId },
+      });
+    }
 
     const billingData = {
-      apartment: order.address.apartment,
-      email: order.user.email,
-      floor: order.address.floor,
       first_name: order.user.name,
       last_name: 'Customer',
+      email: order.user.email,
       phone_number: order.user.phone,
-      street: order.address.street,
-      building: order.address.building,
-      city: order.address.city,
-      country: 'EG',
+      building: order.address.building || '1',
+      floor: order.address.floor || '1',
+      apartment: order.address.apartment || '1',
+      street: order.address.street || 'Default Street',
+      city: order.address.city || 'Cairo',
       state: 'Cairo',
+      country: 'EG',
     };
 
     const paymentKey = await this.paymobService.generatePaymentKey(
@@ -212,6 +225,7 @@ export class OrderService {
       paymobOrderId,
       billingData,
     );
+
     const iframeUrl = this.paymobService.getPaymentIframeUrl(paymentKey);
 
     return { iframeUrl };
