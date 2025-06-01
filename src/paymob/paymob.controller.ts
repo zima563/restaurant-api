@@ -1,9 +1,11 @@
 import {
   Controller,
   Post,
-  Body,
+  Req,
   HttpCode,
   BadRequestException,
+  Query,
+  Get,
 } from '@nestjs/common';
 import { PaymobService } from './paymob.service';
 
@@ -11,21 +13,20 @@ import { PaymobService } from './paymob.service';
 export class PaymobController {
   constructor(private paymobService: PaymobService) {}
 
-  @Post('callback')
+  @Get('callback')
   @HttpCode(200)
-  async handleCallback(@Body() body: any) {
-    const isValid = this.paymobService.verifyHmac(body); // 👈 ابعت body مش obj
-    console.log('🔍 isValid:', isValid);
-    console.log('📦 Full Callback body:', body);
+  async handleCallback(@Query() query: any) {
+    const isValid = this.paymobService.verifyHmac(query);
 
     if (!isValid) {
       throw new BadRequestException('Invalid HMAC signature');
     }
+    const success = query.success === 'true';
 
-    const orderId = body.obj.order?.merchant_order_id ?? body.obj.order?.id;
-    const success = body.obj.success;
-
-    await this.paymobService.updateOrderPaymentStatus(Number(orderId), success);
+    await this.paymobService.updateOrderPaymentStatus(
+      query.merchant_order_id,
+      success,
+    );
 
     return { message: 'Callback received' };
   }

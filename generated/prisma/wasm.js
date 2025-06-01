@@ -167,6 +167,7 @@ exports.Prisma.CartItemScalarFieldEnum = {
 
 exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
+  merchantOrderId: 'merchantOrderId',
   userId: 'userId',
   addressId: 'addressId',
   status: 'status',
@@ -246,6 +247,10 @@ exports.Prisma.ProductOrderByRelevanceFieldEnum = {
   name: 'name',
   description: 'description',
   imageUrl: 'imageUrl'
+};
+
+exports.Prisma.OrderOrderByRelevanceFieldEnum = {
+  merchantOrderId: 'merchantOrderId'
 };
 
 exports.Prisma.ReviewOrderByRelevanceFieldEnum = {

@@ -17,56 +17,58 @@ export class PaymobService {
     private readonly prisma: PrismaService,
   ) {}
 
-  verifyHmac(body: any): boolean {
-    const hmacSecret = this.config.get('PAYMOB_HMAC_SECRET');
-
-    const obj = body.obj;
-
-    const fields = [
-      obj.amount_cents,
-      obj.created_at,
-      obj.currency,
-      obj.error_occured,
-      obj.has_parent_transaction,
-      obj.id,
-      obj.integration_id,
-      obj.is_3d_secure,
-      obj.is_auth,
-      obj.is_capture,
-      obj.is_refunded,
-      obj.is_standalone_payment,
-      obj.is_voided,
-      obj.order?.id,
-      obj.owner,
-      obj.pending,
-      obj.source_data?.pan,
-      obj.source_data?.sub_type,
-      obj.source_data?.type,
-      obj.success,
+  verifyHmac(query: Record<string, any>): boolean {
+    const hmacSecret = process.env.PAYMOB_HMAC_SECRET;
+    const keys = [
+      'amount_cents',
+      'created_at',
+      'currency',
+      'error_occured',
+      'has_parent_transaction',
+      'id',
+      'integration_id',
+      'is_3d_secure',
+      'is_auth',
+      'is_capture',
+      'is_refunded',
+      'is_standalone_payment',
+      'is_voided',
+      'order',
+      'owner',
+      'pending',
+      'source_data.pan',
+      'source_data.sub_type',
+      'source_data.type',
+      'success',
     ];
-
-    const concatenated = fields.map((v) => v ?? '').join('');
-
+  
+    const concatenated = keys
+      .map((key) => query[key] ?? '')
+      .join('');
+  
     const generatedHmac = crypto
       .createHmac('sha512', hmacSecret!)
       .update(concatenated)
       .digest('hex');
-
+  
     console.log('🔍 Concatenated:', concatenated);
     console.log('🔐 Generated HMAC:', generatedHmac);
-    console.log('📦 Paymob HMAC:', body.hmac);
-
-    return generatedHmac === body.hmac;
+    console.log('📦 Paymob HMAC:', query.hmac);
+  
+    return generatedHmac === query.hmac;
   }
+  
+  
 
-  async updateOrderPaymentStatus(orderId: number, success: boolean) {
+  async updateOrderPaymentStatus(merchantOrderId: string, success: boolean) {
     await this.prisma.order.update({
-      where: { id: orderId },
+      where: { merchantOrderId },
       data: {
         paymentStatus: success ? 'PAID' : 'UNPAID',
       },
     });
   }
+  
 
   // ✅ Get or cache token
   async authenticate(): Promise<string> {
@@ -100,7 +102,7 @@ export class PaymobService {
   async createOrder(
     token: string,
     amount: number,
-    merchantOrderId: number,
+    merchantOrderId: string,
   ): Promise<number> {
     try {
       const { data } = await firstValueFrom(
@@ -113,7 +115,7 @@ export class PaymobService {
           merchant_order_id: merchantOrderId,
         }),
       );
-
+  
       return data.id;
     } catch (error) {
       console.error(

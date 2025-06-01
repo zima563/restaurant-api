@@ -78,6 +78,7 @@ model CartItem {
 
 model Order {
   id             Int              @id @default(autoincrement())
+  merchantOrderId  String? @unique 
   user           User             @relation(fields: [userId], references: [id])
   userId         Int
   address        Address          @relation(fields: [addressId], references: [id])

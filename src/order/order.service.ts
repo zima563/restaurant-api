@@ -189,13 +189,20 @@ export class OrderService {
     const token = await this.paymobService.authenticate();
 
     let paymobOrderId = order.paymobOrderId;
+    const merchantOrderId = `order-${orderId}-${Date.now()}`;
 
+    await this.prisma.order.update({
+      where: { id: orderId },
+      data: {
+        merchantOrderId,
+      },
+    });
     // ✅ لو مفيش order id محفوظ، اعمله وسجله
     if (!paymobOrderId) {
       paymobOrderId = await this.paymobService.createOrder(
         token,
         order.totalPrice * 100,
-        order.id,
+        merchantOrderId,
       );
 
       // احفظه في الـ DB علشان متكرروش تاني
