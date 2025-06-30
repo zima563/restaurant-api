@@ -1,26 +1,27 @@
+import { IsEnum, IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
+import { FoodType } from './create-product.dto';
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateProductDto {
-  @IsOptional()
   @IsString()
+  @IsOptional()
   name?: string;
 
-  @IsOptional()
   @IsString()
+  @IsOptional()
   description?: string;
+
+  @IsInt()
+  @IsOptional()
+  @Type(() => Number)
+  categoryId?: number;
+
+  @IsEnum(FoodType)
+  @IsOptional()
+  foodType?: FoodType;
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
   price?: number;
-
-  @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  categoryId?: number;
-
-  @IsOptional()
-  @IsString()
-  imageUrl?: string;
 }

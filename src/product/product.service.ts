@@ -63,6 +63,13 @@ export class ProductService {
     const product = await this.prisma.product.findUnique({ where: { id } });
     if (!product) throw new NotFoundException('Product not found');
 
+    const category = await this.prisma.category.findUnique({
+      where: { id: dto.categoryId },
+    });
+
+    if (dto.categoryId && !category) {
+      throw new NotFoundException('Category not found');
+    }
     if (newImageUrl && product.imageUrl) {
       this.imageService.deleteImage(product.imageUrl);
     }

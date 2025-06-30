@@ -61,6 +61,7 @@ model Product {
   isAvailable Boolean     @default(true)
   category    Category    @relation(fields: [categoryId], references: [id])
   categoryId  Int
+  foodType    FoodType
   cartItems   CartItem[]
   orderItems  OrderItem[]
   reviews     Review[]
@@ -157,4 +158,13 @@ enum PaymentStatus {
   PAID
   FAILED
   REFUNDED
+}
+
+enum FoodType {
+  GRILLED // مشويات
+  DESSERTS // حلويات
+  JUICES // عصائر
+  PASTA // مكرونة
+  SEAFOOD // مأكولات بحرية
+  OTHERS // أخرى
 }

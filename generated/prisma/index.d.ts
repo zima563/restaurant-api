@@ -105,6 +105,18 @@ export const PaymentStatus: {
 
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
+
+export const FoodType: {
+  GRILLED: 'GRILLED',
+  DESSERTS: 'DESSERTS',
+  JUICES: 'JUICES',
+  PASTA: 'PASTA',
+  SEAFOOD: 'SEAFOOD',
+  OTHERS: 'OTHERS'
+};
+
+export type FoodType = (typeof FoodType)[keyof typeof FoodType]
+
 }
 
 export type OrderStatus = $Enums.OrderStatus
@@ -122,6 +134,10 @@ export const Role: typeof $Enums.Role
 export type PaymentStatus = $Enums.PaymentStatus
 
 export const PaymentStatus: typeof $Enums.PaymentStatus
+
+export type FoodType = $Enums.FoodType
+
+export const FoodType: typeof $Enums.FoodType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -5069,6 +5085,7 @@ export namespace Prisma {
     imageUrl: string | null
     isAvailable: boolean | null
     categoryId: number | null
+    foodType: $Enums.FoodType | null
     createdAt: Date | null
   }
 
@@ -5080,6 +5097,7 @@ export namespace Prisma {
     imageUrl: string | null
     isAvailable: boolean | null
     categoryId: number | null
+    foodType: $Enums.FoodType | null
     createdAt: Date | null
   }
 
@@ -5091,6 +5109,7 @@ export namespace Prisma {
     imageUrl: number
     isAvailable: number
     categoryId: number
+    foodType: number
     createdAt: number
     _all: number
   }
@@ -5116,6 +5135,7 @@ export namespace Prisma {
     imageUrl?: true
     isAvailable?: true
     categoryId?: true
+    foodType?: true
     createdAt?: true
   }
 
@@ -5127,6 +5147,7 @@ export namespace Prisma {
     imageUrl?: true
     isAvailable?: true
     categoryId?: true
+    foodType?: true
     createdAt?: true
   }
 
@@ -5138,6 +5159,7 @@ export namespace Prisma {
     imageUrl?: true
     isAvailable?: true
     categoryId?: true
+    foodType?: true
     createdAt?: true
     _all?: true
   }
@@ -5236,6 +5258,7 @@ export namespace Prisma {
     imageUrl: string | null
     isAvailable: boolean
     categoryId: number
+    foodType: $Enums.FoodType
     createdAt: Date
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
@@ -5266,6 +5289,7 @@ export namespace Prisma {
     imageUrl?: boolean
     isAvailable?: boolean
     categoryId?: boolean
+    foodType?: boolean
     createdAt?: boolean
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     cartItems?: boolean | Product$cartItemsArgs<ExtArgs>
@@ -5284,10 +5308,11 @@ export namespace Prisma {
     imageUrl?: boolean
     isAvailable?: boolean
     categoryId?: boolean
+    foodType?: boolean
     createdAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "imageUrl" | "isAvailable" | "categoryId" | "createdAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "imageUrl" | "isAvailable" | "categoryId" | "foodType" | "createdAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     cartItems?: boolean | Product$cartItemsArgs<ExtArgs>
@@ -5312,6 +5337,7 @@ export namespace Prisma {
       imageUrl: string | null
       isAvailable: boolean
       categoryId: number
+      foodType: $Enums.FoodType
       createdAt: Date
     }, ExtArgs["result"]["product"]>
     composites: {}
@@ -5693,6 +5719,7 @@ export namespace Prisma {
     readonly imageUrl: FieldRef<"Product", 'String'>
     readonly isAvailable: FieldRef<"Product", 'Boolean'>
     readonly categoryId: FieldRef<"Product", 'Int'>
+    readonly foodType: FieldRef<"Product", 'FoodType'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
   }
     
@@ -12170,6 +12197,7 @@ export namespace Prisma {
     imageUrl: 'imageUrl',
     isAvailable: 'isAvailable',
     categoryId: 'categoryId',
+    foodType: 'foodType',
     createdAt: 'createdAt'
   };
 
@@ -12376,6 +12404,13 @@ export namespace Prisma {
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'FoodType'
+   */
+  export type EnumFoodTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FoodType'>
     
 
 
@@ -12633,6 +12668,7 @@ export namespace Prisma {
     imageUrl?: StringNullableFilter<"Product"> | string | null
     isAvailable?: BoolFilter<"Product"> | boolean
     categoryId?: IntFilter<"Product"> | number
+    foodType?: EnumFoodTypeFilter<"Product"> | $Enums.FoodType
     createdAt?: DateTimeFilter<"Product"> | Date | string
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
     cartItems?: CartItemListRelationFilter
@@ -12648,6 +12684,7 @@ export namespace Prisma {
     imageUrl?: SortOrderInput | SortOrder
     isAvailable?: SortOrder
     categoryId?: SortOrder
+    foodType?: SortOrder
     createdAt?: SortOrder
     category?: CategoryOrderByWithRelationInput
     cartItems?: CartItemOrderByRelationAggregateInput
@@ -12667,6 +12704,7 @@ export namespace Prisma {
     imageUrl?: StringNullableFilter<"Product"> | string | null
     isAvailable?: BoolFilter<"Product"> | boolean
     categoryId?: IntFilter<"Product"> | number
+    foodType?: EnumFoodTypeFilter<"Product"> | $Enums.FoodType
     createdAt?: DateTimeFilter<"Product"> | Date | string
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
     cartItems?: CartItemListRelationFilter
@@ -12682,6 +12720,7 @@ export namespace Prisma {
     imageUrl?: SortOrderInput | SortOrder
     isAvailable?: SortOrder
     categoryId?: SortOrder
+    foodType?: SortOrder
     createdAt?: SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
@@ -12701,6 +12740,7 @@ export namespace Prisma {
     imageUrl?: StringNullableWithAggregatesFilter<"Product"> | string | null
     isAvailable?: BoolWithAggregatesFilter<"Product"> | boolean
     categoryId?: IntWithAggregatesFilter<"Product"> | number
+    foodType?: EnumFoodTypeWithAggregatesFilter<"Product"> | $Enums.FoodType
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
   }
 
@@ -13332,6 +13372,7 @@ export namespace Prisma {
     price: number
     imageUrl?: string | null
     isAvailable?: boolean
+    foodType: $Enums.FoodType
     createdAt?: Date | string
     category: CategoryCreateNestedOneWithoutProductsInput
     cartItems?: CartItemCreateNestedManyWithoutProductInput
@@ -13347,6 +13388,7 @@ export namespace Prisma {
     imageUrl?: string | null
     isAvailable?: boolean
     categoryId: number
+    foodType: $Enums.FoodType
     createdAt?: Date | string
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -13359,6 +13401,7 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
@@ -13374,6 +13417,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     categoryId?: IntFieldUpdateOperationsInput | number
+    foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -13388,6 +13432,7 @@ export namespace Prisma {
     imageUrl?: string | null
     isAvailable?: boolean
     categoryId: number
+    foodType: $Enums.FoodType
     createdAt?: Date | string
   }
 
@@ -13397,6 +13442,7 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -13408,6 +13454,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     categoryId?: IntFieldUpdateOperationsInput | number
+    foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -14132,6 +14179,13 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type EnumFoodTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.FoodType | EnumFoodTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FoodType[]
+    notIn?: $Enums.FoodType[]
+    not?: NestedEnumFoodTypeFilter<$PrismaModel> | $Enums.FoodType
+  }
+
   export type CategoryScalarRelationFilter = {
     is?: CategoryWhereInput
     isNot?: CategoryWhereInput
@@ -14161,6 +14215,7 @@ export namespace Prisma {
     imageUrl?: SortOrder
     isAvailable?: SortOrder
     categoryId?: SortOrder
+    foodType?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -14178,6 +14233,7 @@ export namespace Prisma {
     imageUrl?: SortOrder
     isAvailable?: SortOrder
     categoryId?: SortOrder
+    foodType?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -14189,6 +14245,7 @@ export namespace Prisma {
     imageUrl?: SortOrder
     isAvailable?: SortOrder
     categoryId?: SortOrder
+    foodType?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -14212,6 +14269,16 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type EnumFoodTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FoodType | EnumFoodTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FoodType[]
+    notIn?: $Enums.FoodType[]
+    not?: NestedEnumFoodTypeWithAggregatesFilter<$PrismaModel> | $Enums.FoodType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFoodTypeFilter<$PrismaModel>
+    _max?: NestedEnumFoodTypeFilter<$PrismaModel>
   }
 
   export type ProductScalarRelationFilter = {
@@ -14975,6 +15042,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type EnumFoodTypeFieldUpdateOperationsInput = {
+    set?: $Enums.FoodType
+  }
+
   export type CategoryUpdateOneRequiredWithoutProductsNestedInput = {
     create?: XOR<CategoryCreateWithoutProductsInput, CategoryUncheckedCreateWithoutProductsInput>
     connectOrCreate?: CategoryCreateOrConnectWithoutProductsInput
@@ -15481,6 +15552,13 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedEnumFoodTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.FoodType | EnumFoodTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FoodType[]
+    notIn?: $Enums.FoodType[]
+    not?: NestedEnumFoodTypeFilter<$PrismaModel> | $Enums.FoodType
+  }
+
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[]
@@ -15495,6 +15573,16 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type NestedEnumFoodTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FoodType | EnumFoodTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.FoodType[]
+    notIn?: $Enums.FoodType[]
+    not?: NestedEnumFoodTypeWithAggregatesFilter<$PrismaModel> | $Enums.FoodType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFoodTypeFilter<$PrismaModel>
+    _max?: NestedEnumFoodTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
@@ -15993,6 +16081,7 @@ export namespace Prisma {
     price: number
     imageUrl?: string | null
     isAvailable?: boolean
+    foodType: $Enums.FoodType
     createdAt?: Date | string
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
@@ -16006,6 +16095,7 @@ export namespace Prisma {
     price: number
     imageUrl?: string | null
     isAvailable?: boolean
+    foodType: $Enums.FoodType
     createdAt?: Date | string
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -16049,6 +16139,7 @@ export namespace Prisma {
     imageUrl?: StringNullableFilter<"Product"> | string | null
     isAvailable?: BoolFilter<"Product"> | boolean
     categoryId?: IntFilter<"Product"> | number
+    foodType?: EnumFoodTypeFilter<"Product"> | $Enums.FoodType
     createdAt?: DateTimeFilter<"Product"> | Date | string
   }
 
@@ -16260,6 +16351,7 @@ export namespace Prisma {
     price: number
     imageUrl?: string | null
     isAvailable?: boolean
+    foodType: $Enums.FoodType
     createdAt?: Date | string
     category: CategoryCreateNestedOneWithoutProductsInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
@@ -16274,6 +16366,7 @@ export namespace Prisma {
     imageUrl?: string | null
     isAvailable?: boolean
     categoryId: number
+    foodType: $Enums.FoodType
     createdAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
@@ -16339,6 +16432,7 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
@@ -16353,6 +16447,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     categoryId?: IntFieldUpdateOperationsInput | number
+    foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
@@ -16621,6 +16716,7 @@ export namespace Prisma {
     price: number
     imageUrl?: string | null
     isAvailable?: boolean
+    foodType: $Enums.FoodType
     createdAt?: Date | string
     category: CategoryCreateNestedOneWithoutProductsInput
     cartItems?: CartItemCreateNestedManyWithoutProductInput
@@ -16635,6 +16731,7 @@ export namespace Prisma {
     imageUrl?: string | null
     isAvailable?: boolean
     categoryId: number
+    foodType: $Enums.FoodType
     createdAt?: Date | string
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
@@ -16700,6 +16797,7 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
@@ -16714,6 +16812,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     categoryId?: IntFieldUpdateOperationsInput | number
+    foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
@@ -16757,6 +16856,7 @@ export namespace Prisma {
     price: number
     imageUrl?: string | null
     isAvailable?: boolean
+    foodType: $Enums.FoodType
     createdAt?: Date | string
     category: CategoryCreateNestedOneWithoutProductsInput
     cartItems?: CartItemCreateNestedManyWithoutProductInput
@@ -16771,6 +16871,7 @@ export namespace Prisma {
     imageUrl?: string | null
     isAvailable?: boolean
     categoryId: number
+    foodType: $Enums.FoodType
     createdAt?: Date | string
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -16836,6 +16937,7 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
@@ -16850,6 +16952,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     categoryId?: IntFieldUpdateOperationsInput | number
+    foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -17238,6 +17341,7 @@ export namespace Prisma {
     price: number
     imageUrl?: string | null
     isAvailable?: boolean
+    foodType: $Enums.FoodType
     createdAt?: Date | string
   }
 
@@ -17247,6 +17351,7 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
@@ -17260,6 +17365,7 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -17273,6 +17379,7 @@ export namespace Prisma {
     price?: FloatFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

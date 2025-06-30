@@ -155,6 +155,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   imageUrl: 'imageUrl',
   isAvailable: 'isAvailable',
   categoryId: 'categoryId',
+  foodType: 'foodType',
   createdAt: 'createdAt'
 };
 
@@ -268,6 +269,15 @@ exports.Prisma.NotificationOrderByRelevanceFieldEnum = {
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
   ADMIN: 'ADMIN'
+};
+
+exports.FoodType = exports.$Enums.FoodType = {
+  GRILLED: 'GRILLED',
+  DESSERTS: 'DESSERTS',
+  JUICES: 'JUICES',
+  PASTA: 'PASTA',
+  SEAFOOD: 'SEAFOOD',
+  OTHERS: 'OTHERS'
 };
 
 exports.OrderStatus = exports.$Enums.OrderStatus = {

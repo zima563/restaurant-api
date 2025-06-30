@@ -1,48 +1,13 @@
-import { Prisma } from '../../../generated/prisma';
-
 export function buildProductQueryFilters(query: any) {
-  // 📦 Pagination
-  const page = parseInt(query.page) || 1;
-  const limit = parseInt(query.limit) || 10;
-  const skip = (page - 1) * limit;
+  const { categoryId, foodType, page = 1, limit = 10, ...other } = query;
+  const where: any = {};
 
-  // 🔎 Filtering
-  const filters: any = {};
+  if (categoryId) where.categoryId = +categoryId;
+  if (foodType) where.foodType = foodType;
 
-  if (query.search) {
-    filters.name = {
-      contains: query.search,
-      mode: 'insensitive', // ✅ تجاهل الحروف الكبيرة والصغيرة
-    };
-  }
+  const take = +limit;
+  const skip = (+page - 1) * take;
+  const orderBy = { createdAt: 'desc' as const };
 
-  if (query.categoryId) {
-    filters.categoryId = Number(query.categoryId);
-  }
-
-  if (query.minPrice || query.maxPrice) {
-    filters.price = {};
-    if (query.minPrice) filters.price.gte = Number(query.minPrice);
-    if (query.maxPrice) filters.price.lte = Number(query.maxPrice);
-  }
-
-  // 🔃 Sorting
-  const validSortFields = ['createdAt', 'price', 'name'];
-  const sortBy = validSortFields.includes(query.sortBy)
-    ? query.sortBy
-    : 'createdAt';
-
-  const sortOrder =
-    query.sortOrder === 'asc' ? Prisma.SortOrder.asc : Prisma.SortOrder.desc;
-
-  return {
-    where: filters,
-    take: limit,
-    skip,
-    orderBy: {
-      [sortBy]: sortOrder,
-    },
-    page,
-    limit,
-  };
+  return { where, take, skip, orderBy, page: +page, limit: +limit };
 }

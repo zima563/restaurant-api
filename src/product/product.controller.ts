@@ -20,13 +20,14 @@ import { extname } from 'path';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
+import { FilterProductDto } from './dto/filter-product.dto';
 
 @Controller('products')
 export class ProductController {
   constructor(private productService: ProductService) {}
 
   @Get()
-  findAll(@Query() query: any) {
+  findAll(@Query() query: FilterProductDto) {
     return this.productService.findAll(query);
   }
 
