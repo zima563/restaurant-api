@@ -53,19 +53,37 @@ model Category {
 }
 
 model Product {
-  id          Int         @id @default(autoincrement())
+  id          Int            @id @default(autoincrement())
   name        String
   description String
   price       Float
   imageUrl    String?
-  isAvailable Boolean     @default(true)
-  category    Category    @relation(fields: [categoryId], references: [id])
+  isAvailable Boolean        @default(true)
+  category    Category       @relation(fields: [categoryId], references: [id])
   categoryId  Int
   foodType    FoodType
+  sizes       ProductSize[]
+  addons      ProductAddon[]
   cartItems   CartItem[]
   orderItems  OrderItem[]
   reviews     Review[]
-  createdAt   DateTime    @default(now())
+  createdAt   DateTime       @default(now())
+}
+
+model ProductSize {
+  id        Int     @id @default(autoincrement())
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  name      String // مثال: صغير، وسط، كبير
+  price     Float
+}
+
+model ProductAddon {
+  id        Int     @id @default(autoincrement())
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  name      String // مثال: كولا، بطاطس، جبنة زيادة...
+  price     Float
 }
 
 model CartItem {

@@ -52,12 +52,21 @@ export class ProductController {
       }),
     }),
   )
-  create(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() dto: CreateProductDto,
-  ) {
+  create(@UploadedFile() file: Express.Multer.File, @Body() dto: any) {
     const imageUrl = file ? `/uploads/products/${file.filename}` : undefined;
-    return this.productService.create(dto, imageUrl);
+    const sizes = dto.sizes ? JSON.parse(dto.sizes) : undefined;
+    const addons = dto.addons ? JSON.parse(dto.addons) : undefined;
+
+    return this.productService.create(
+      {
+        ...dto,
+        price: Number(dto.price),
+        categoryId: Number(dto.categoryId),
+        sizes,
+        addons,
+      },
+      imageUrl,
+    );
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

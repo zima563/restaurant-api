@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   IsNumber,
   isNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
 
@@ -37,4 +38,12 @@ export class CreateProductDto {
   @IsNotEmpty()
   @Type(() => Number)
   price: number;
+
+  @IsString()
+  @IsOptional()
+  sizes?: { name: string; price: number }[];
+
+  @IsString()
+  @IsOptional()
+  addons?: { name: string; price: number }[];
 }

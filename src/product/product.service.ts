@@ -13,15 +13,21 @@ export class ProductService {
   ) {}
 
   async create(dto: CreateProductDto, imageUrl?: string) {
+    const { sizes, addons, ...rest } = dto;
     const category = await this.prisma.category.findUnique({
-      where: { id: dto.categoryId },
+      where: { id: Number(rest.categoryId) },
     });
     if (!category) throw new NotFoundException('Category not found');
     return this.prisma.product.create({
       data: {
-        ...dto,
+        ...rest,
         imageUrl,
+        price: Number(rest.price),
+        categoryId: Number(rest.categoryId),
+        sizes: sizes ? { create: sizes } : undefined,
+        addons: addons ? { create: addons } : undefined,
       },
+      include: { sizes: true, addons: true },
     });
   }
 
@@ -53,7 +59,11 @@ export class ProductService {
   async findOne(id: number) {
     const product = await this.prisma.product.findUnique({
       where: { id },
-      include: { category: true },
+      include: {
+        category: true,
+        sizes: true,
+        addons: true,
+      },
     });
     if (!product) throw new NotFoundException('Product not found');
     return product;
