@@ -8,6 +8,12 @@ export class AddToCartDto {
 
   @Type(() => Number)
   @IsNumber()
+  sizeId: number;
+
+  addonIds?: number[];
+
+  @Type(() => Number)
+  @IsNumber()
   @Min(1)
   quantity: number;
 }

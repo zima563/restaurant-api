@@ -177,7 +177,29 @@ exports.Prisma.CartItemScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   productId: 'productId',
+  sizeId: 'sizeId',
   quantity: 'quantity'
+};
+
+exports.Prisma.CartItemAddonScalarFieldEnum = {
+  id: 'id',
+  cartItemId: 'cartItemId',
+  addonId: 'addonId'
+};
+
+exports.Prisma.OrderItemScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  productId: 'productId',
+  sizeId: 'sizeId',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice'
+};
+
+exports.Prisma.OrderItemAddonScalarFieldEnum = {
+  id: 'id',
+  orderItemId: 'orderItemId',
+  addonId: 'addonId'
 };
 
 exports.Prisma.OrderScalarFieldEnum = {
@@ -191,14 +213,6 @@ exports.Prisma.OrderScalarFieldEnum = {
   paymentStatus: 'paymentStatus',
   paymobOrderId: 'paymobOrderId',
   createdAt: 'createdAt'
-};
-
-exports.Prisma.OrderItemScalarFieldEnum = {
-  id: 'id',
-  orderId: 'orderId',
-  productId: 'productId',
-  quantity: 'quantity',
-  unitPrice: 'unitPrice'
 };
 
 exports.Prisma.ReviewScalarFieldEnum = {
@@ -331,8 +345,10 @@ exports.Prisma.ModelName = {
   ProductSize: 'ProductSize',
   ProductAddon: 'ProductAddon',
   CartItem: 'CartItem',
-  Order: 'Order',
+  CartItemAddon: 'CartItemAddon',
   OrderItem: 'OrderItem',
+  OrderItemAddon: 'OrderItemAddon',
+  Order: 'Order',
   Review: 'Review',
   OrderStatusLog: 'OrderStatusLog',
   Notification: 'Notification'

@@ -71,28 +71,64 @@ model Product {
 }
 
 model ProductSize {
-  id        Int     @id @default(autoincrement())
-  product   Product @relation(fields: [productId], references: [id])
+  id        Int         @id @default(autoincrement())
+  product   Product     @relation(fields: [productId], references: [id])
   productId Int
-  name      String // مثال: صغير، وسط، كبير
+  name      String
   price     Float
+  CartItem  CartItem[]
+  OrderItem OrderItem[]
 }
 
 model ProductAddon {
-  id        Int     @id @default(autoincrement())
-  product   Product @relation(fields: [productId], references: [id])
-  productId Int
-  name      String // مثال: كولا، بطاطس، جبنة زيادة...
-  price     Float
+  id             Int              @id @default(autoincrement())
+  product        Product          @relation(fields: [productId], references: [id])
+  productId      Int
+  name           String // مثال: كولا، بطاطس، جبنة زيادة...
+  price          Float
+  CartItemAddon  CartItemAddon[]
+  OrderItemAddon OrderItemAddon[]
 }
 
 model CartItem {
-  id        Int     @id @default(autoincrement())
-  user      User    @relation(fields: [userId], references: [id])
+  id        Int             @id @default(autoincrement())
+  user      User            @relation(fields: [userId], references: [id])
   userId    Int
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product         @relation(fields: [productId], references: [id])
   productId Int
+  size      ProductSize?    @relation(fields: [sizeId], references: [id])
+  sizeId    Int?
+  addons    CartItemAddon[]
   quantity  Int
+}
+
+model CartItemAddon {
+  id         Int          @id @default(autoincrement())
+  cartItem   CartItem     @relation(fields: [cartItemId], references: [id])
+  cartItemId Int
+  addon      ProductAddon @relation(fields: [addonId], references: [id])
+  addonId    Int
+}
+
+model OrderItem {
+  id        Int              @id @default(autoincrement())
+  order     Order            @relation(fields: [orderId], references: [id])
+  orderId   Int
+  product   Product          @relation(fields: [productId], references: [id])
+  productId Int
+  size      ProductSize?     @relation(fields: [sizeId], references: [id])
+  sizeId    Int?
+  addons    OrderItemAddon[]
+  quantity  Int
+  unitPrice Float
+}
+
+model OrderItemAddon {
+  id          Int          @id @default(autoincrement())
+  orderItem   OrderItem    @relation(fields: [orderItemId], references: [id])
+  orderItemId Int
+  addon       ProductAddon @relation(fields: [addonId], references: [id])
+  addonId     Int
 }
 
 model Order {
@@ -110,16 +146,6 @@ model Order {
   orderItems      OrderItem[]
   createdAt       DateTime         @default(now())
   OrderStatusLog  OrderStatusLog[]
-}
-
-model OrderItem {
-  id        Int     @id @default(autoincrement())
-  order     Order   @relation(fields: [orderId], references: [id])
-  orderId   Int
-  product   Product @relation(fields: [productId], references: [id])
-  productId Int
-  quantity  Int
-  unitPrice Float
 }
 
 model Review {
