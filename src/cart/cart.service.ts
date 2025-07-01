@@ -119,18 +119,52 @@ export class CartService {
     };
   }
 
-  async updateQuantity(userId: number, itemId: number, dto: UpdateCartDto) {
-    const item = await this.prisma.cartItem.findUnique({
-      where: { id: itemId },
+  async updateCartItem(userId: number, cartItemId: number, dto: UpdateCartDto) {
+    const cartItem = await this.prisma.cartItem.findUnique({
+      where: { id: cartItemId },
+      include: { addons: true },
     });
 
-    if (!item || item.userId !== userId) {
+    if (!cartItem || cartItem.userId !== userId) {
       throw new NotFoundException('Cart item not found');
     }
 
+    if (dto.sizeId) {
+      const size = await this.prisma.productSize.findUnique({
+        where: { id: dto.sizeId },
+      });
+      if (!size || size.productId !== cartItem.productId)
+        throw new BadRequestException('Invalid size');
+    }
+
+    if (dto.addonIds && dto.addonIds.length > 0) {
+      const addons = await this.prisma.productAddon.findMany({
+        where: { id: { in: dto.addonIds } },
+      });
+      const valid = addons.every(
+        (addon) => addon.productId === cartItem.productId,
+      );
+      if (!valid) throw new BadRequestException('Invalid addon(s)');
+    }
+
+    if (dto.addonIds) {
+      await this.prisma.cartItemAddon.deleteMany({ where: { cartItemId } });
+      await this.prisma.cartItemAddon.createMany({
+        data: dto.addonIds.map((addonId) => ({ cartItemId, addonId })),
+      });
+    }
+
     return this.prisma.cartItem.update({
-      where: { id: itemId },
-      data: { quantity: dto.quantity },
+      where: { id: cartItemId },
+      data: {
+        sizeId: dto.sizeId,
+        quantity: dto.quantity ?? cartItem.quantity,
+      },
+      include: {
+        product: true,
+        size: true,
+        addons: { include: { addon: true } },
+      },
     });
   }
 

@@ -30,12 +30,12 @@ export class CartController {
   }
 
   @Patch(':id')
-  updateQuantity(
+  updateCartItem(
     @Request() req,
     @Param('id') id: string,
     @Body() dto: UpdateCartDto,
   ) {
-    return this.cartService.updateQuantity(req.user.userId, +id, dto);
+    return this.cartService.updateCartItem(req.user.userId, +id, dto);
   }
 
   @Delete(':id')

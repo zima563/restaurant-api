@@ -25,17 +25,22 @@ export class OrderService {
   ) {}
 
   async createOrder(userId: number, dto: CreateOrderDto) {
+    // جيب كل عناصر الكارت بالمعلومات المطلوبة
     const cartItems = await this.prisma.cartItem.findMany({
       where: { userId },
-      include: { product: true },
+      include: {
+        product: true,
+        size: true,
+        addons: { include: { addon: true } },
+      },
     });
 
     if (!cartItems || cartItems.length === 0) {
       throw new BadRequestException('Cart is empty');
     }
 
+    // تأكيد عنوان التوصيل
     let selectedAddressId: number;
-
     if (dto.addressId) {
       const address = await this.prisma.address.findUnique({
         where: { id: dto.addressId },
@@ -61,38 +66,61 @@ export class OrderService {
       selectedAddressId = defaultAddress.id;
     }
 
-    const productTotal = cartItems.reduce((total, item) => {
-      return total + item.product.price * item.quantity;
-    }, 0);
+    // حساب كل عنصر (unitPrice = سعر الحجم + إجمالي أسعار الإضافات)
+    const orderItemsData = cartItems.map((item) => {
+      const sizePrice = item.size ? item.size.price : 0;
+      const addonsTotal = item.addons.reduce(
+        (sum, ai) => sum + ai.addon.price,
+        0,
+      );
+      const unitPrice = sizePrice + addonsTotal;
+      return {
+        productId: item.productId,
+        sizeId: item.sizeId,
+        quantity: item.quantity,
+        unitPrice,
+        addons: {
+          create: item.addons.map((ai) => ({
+            addonId: ai.addonId,
+          })),
+        },
+      };
+    });
 
+    // إجمالي الطلب
+    const productTotal = orderItemsData.reduce(
+      (sum, item) => sum + item.unitPrice * item.quantity,
+      0,
+    );
     const shipping = cartItems.length > 0 ? this.SHIPPING_COST : 0;
     const grandTotal = productTotal + shipping;
 
-    const orderItemsData = cartItems.map((item) => ({
-      productId: item.productId,
-      quantity: item.quantity,
-      unitPrice: item.product.price,
-    }));
-
+    // إنشاء الأوردر
     const order = await this.prisma.order.create({
       data: {
         userId,
         addressId: selectedAddressId,
         paymentMethod: dto.paymentMethod,
         totalPrice: grandTotal,
-        orderItems: {
-          create: orderItemsData,
-        },
+        orderItems: { create: orderItemsData },
       },
       include: {
-        orderItems: true,
+        orderItems: {
+          include: {
+            product: true,
+            size: true,
+            addons: { include: { addon: true } },
+          },
+        },
         address: true,
       },
     });
 
-    await this.prisma.cartItem.deleteMany({
-      where: { userId },
+    // امسح الكارت والإضافات المرتبطة بعد الطلب
+    await this.prisma.cartItemAddon.deleteMany({
+      where: { cartItemId: { in: cartItems.map((i) => i.id) } },
     });
+    await this.prisma.cartItem.deleteMany({ where: { userId } });
 
     return order;
   }
@@ -185,32 +213,22 @@ export class OrderService {
     if (!order || order.userId !== userId) {
       throw new ForbiddenException('Not allowed to pay for this order');
     }
-
+    if (order.paymentStatus === 'PAID') {
+      throw new BadRequestException('Order has already been paid');
+    }
     const token = await this.paymobService.authenticate();
 
-    let paymobOrderId = order.paymobOrderId;
     const merchantOrderId = `order-${orderId}-${Date.now()}`;
+    const paymobOrderId = await this.paymobService.createOrder(
+      token,
+      order.totalPrice * 100,
+      merchantOrderId,
+    );
 
     await this.prisma.order.update({
-      where: { id: orderId },
-      data: {
-        merchantOrderId,
-      },
+      where: { id: order.id },
+      data: { paymobOrderId, merchantOrderId },
     });
-    // ✅ لو مفيش order id محفوظ، اعمله وسجله
-    if (!paymobOrderId) {
-      paymobOrderId = await this.paymobService.createOrder(
-        token,
-        order.totalPrice * 100,
-        merchantOrderId,
-      );
-
-      // احفظه في الـ DB علشان متكرروش تاني
-      await this.prisma.order.update({
-        where: { id: order.id },
-        data: { paymobOrderId },
-      });
-    }
 
     const billingData = {
       first_name: order.user.name,
