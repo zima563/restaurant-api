@@ -9,7 +9,13 @@ import * as dns from 'dns';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: ['http://localhost:5174', 'http://localhost:3000'], // ضيف كل origins اللي عندك
+    origin: [
+      'http://localhost:5174',
+      'http://127.0.0.1:5174',
+      'http://localhost:3000',
+      'http://127.0.0.1:3000',
+    ],
+    // ضيف كل origins اللي عندك
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
