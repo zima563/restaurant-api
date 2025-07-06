@@ -23,6 +23,13 @@ import { UpdatePaymentStatusDto } from './dto/update-payment-status.dto';
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
+  @UseGuards(JwtAuthGuard)
+  @Get('my')
+  async getMyOrders(@Request() req) {
+    const userId = req.user.userId;
+    return this.orderService.getOrdersByUser(userId);
+  }
+
   @Post()
   createOrder(@Request() req, @Body() dto: CreateOrderDto) {
     return this.orderService.createOrder(req.user.userId, dto);
@@ -31,13 +38,6 @@ export class OrderController {
   @Get()
   getOrders(@Request() req) {
     return this.orderService.getOrders(req.user.userId);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('my')
-  async getMyOrders(@Request() req) {
-    const userId = req.user.userId;
-    return this.orderService.getOrdersByUser(userId);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
