@@ -33,6 +33,13 @@ export class OrderController {
     return this.orderService.getOrders(req.user.userId);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('my')
+  async getMyOrders(@Request() req) {
+    const userId = req.user.userId;
+    return this.orderService.getOrdersByUser(userId);
+  }
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Patch(':id/status')
