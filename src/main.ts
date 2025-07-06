@@ -9,9 +9,9 @@ import * as dns from 'dns';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-  origin: ["http://localhost:5174", "http://localhost:3000", ...], // ضيف كل origins اللي عندك
-  credentials: true,
-});
+    origin: ['http://localhost:5174', 'http://localhost:3000'], // ضيف كل origins اللي عندك
+    credentials: true,
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
