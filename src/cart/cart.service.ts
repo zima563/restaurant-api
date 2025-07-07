@@ -20,6 +20,12 @@ export class CartService {
         addons: { include: { addon: true } },
       },
     });
+    items.forEach((item) => {
+      if (item.product.imageUrl) {
+        item.product.imageUrl =
+          process.env.MEDIA_BASE_URL + item.product.imageUrl;
+      }
+    });
 
     const itemsCount = items.length;
 

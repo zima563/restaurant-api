@@ -45,6 +45,11 @@ export class ProductService {
       }),
       this.prisma.product.count({ where }),
     ]);
+    products.forEach((product) => {
+      if (product.imageUrl) {
+        product.imageUrl = process.env.MEDIA_BASE_URL + product.imageUrl;
+      }
+    });
 
     return {
       data: products,
@@ -66,6 +71,9 @@ export class ProductService {
       },
     });
     if (!product) throw new NotFoundException('Product not found');
+    if (product.imageUrl) {
+      product.imageUrl = process.env.MEDIA_BASE_URL + product.imageUrl;
+    }
     return product;
   }
 

@@ -28,7 +28,7 @@ export class CategoryService {
     });
     categories.forEach((category) => {
       if (category.imageUrl) {
-        category.imageUrl = `https://media.queen.kitchen${category.imageUrl}`;
+        category.imageUrl = process.env.MEDIA_BASE_URL + category.imageUrl;
       }
     });
     return;
@@ -37,7 +37,7 @@ export class CategoryService {
   async findOne(id: number) {
     const category = await this.prisma.category.findUnique({ where: { id } });
     if (!category) throw new NotFoundException('Category not found');
-    category.imageUrl = `https://media.queen.kitchen${category.imageUrl}`;
+    category.imageUrl = (process.env.MEDIA_BASE_URL ?? '') + category.imageUrl;
     return category;
   }
 
