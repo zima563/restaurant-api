@@ -23,14 +23,21 @@ export class CategoryService {
   }
 
   async findAll() {
-    return this.prisma.category.findMany({
+    const categories = await this.prisma.category.findMany({
       orderBy: { createdAt: 'desc' },
     });
+    categories.forEach((category) => {
+      if (category.imageUrl) {
+        category.imageUrl = `https://media.queen.kitchen${category.imageUrl}`;
+      }
+    });
+    return;
   }
 
   async findOne(id: number) {
     const category = await this.prisma.category.findUnique({ where: { id } });
     if (!category) throw new NotFoundException('Category not found');
+    category.imageUrl = `https://media.queen.kitchen${category.imageUrl}`;
     return category;
   }
 
