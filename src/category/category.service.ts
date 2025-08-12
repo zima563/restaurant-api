@@ -31,7 +31,7 @@ export class CategoryService {
         category.imageUrl = process.env.MEDIA_BASE_URL + category.imageUrl;
       }
     });
-    return;
+    return categories;
   }
 
   async findOne(id: number) {
