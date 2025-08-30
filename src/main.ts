@@ -56,8 +56,8 @@ async function bootstrap() {
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
 
   // ✅ Listen
-  const port = process.env.PORT ?? 3000;
-  await app.listen(port);
+  const port = process.env.PORT || 3000;
+  await app.listen(port, '0.0.0.0');
 
   console.log(`🚀 Server running on http://localhost:${port}`);
 

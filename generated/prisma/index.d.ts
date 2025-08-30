@@ -83,6 +83,11 @@ export type OrderStatusLog = $Result.DefaultSelection<Prisma.$OrderStatusLogPayl
  * 
  */
 export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
+/**
+ * Model PasswordOtp
+ * 
+ */
+export type PasswordOtp = $Result.DefaultSelection<Prisma.$PasswordOtpPayload>
 
 /**
  * Enums
@@ -423,6 +428,16 @@ export class PrismaClient<
     * ```
     */
   get notification(): Prisma.NotificationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.passwordOtp`: Exposes CRUD operations for the **PasswordOtp** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PasswordOtps
+    * const passwordOtps = await prisma.passwordOtp.findMany()
+    * ```
+    */
+  get passwordOtp(): Prisma.PasswordOtpDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -876,7 +891,8 @@ export namespace Prisma {
     Order: 'Order',
     Review: 'Review',
     OrderStatusLog: 'OrderStatusLog',
-    Notification: 'Notification'
+    Notification: 'Notification',
+    PasswordOtp: 'PasswordOtp'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -895,7 +911,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "address" | "category" | "product" | "productSize" | "productAddon" | "cartItem" | "cartItemAddon" | "orderItem" | "orderItemAddon" | "order" | "review" | "orderStatusLog" | "notification"
+      modelProps: "user" | "address" | "category" | "product" | "productSize" | "productAddon" | "cartItem" | "cartItemAddon" | "orderItem" | "orderItemAddon" | "order" | "review" | "orderStatusLog" | "notification" | "passwordOtp"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1823,6 +1839,72 @@ export namespace Prisma {
           }
         }
       }
+      PasswordOtp: {
+        payload: Prisma.$PasswordOtpPayload<ExtArgs>
+        fields: Prisma.PasswordOtpFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PasswordOtpFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PasswordOtpPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PasswordOtpFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PasswordOtpPayload>
+          }
+          findFirst: {
+            args: Prisma.PasswordOtpFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PasswordOtpPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PasswordOtpFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PasswordOtpPayload>
+          }
+          findMany: {
+            args: Prisma.PasswordOtpFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PasswordOtpPayload>[]
+          }
+          create: {
+            args: Prisma.PasswordOtpCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PasswordOtpPayload>
+          }
+          createMany: {
+            args: Prisma.PasswordOtpCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PasswordOtpDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PasswordOtpPayload>
+          }
+          update: {
+            args: Prisma.PasswordOtpUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PasswordOtpPayload>
+          }
+          deleteMany: {
+            args: Prisma.PasswordOtpDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PasswordOtpUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PasswordOtpUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PasswordOtpPayload>
+          }
+          aggregate: {
+            args: Prisma.PasswordOtpAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePasswordOtp>
+          }
+          groupBy: {
+            args: Prisma.PasswordOtpGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PasswordOtpGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PasswordOtpCountArgs<ExtArgs>
+            result: $Utils.Optional<PasswordOtpCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1921,6 +2003,7 @@ export namespace Prisma {
     review?: ReviewOmit
     orderStatusLog?: OrderStatusLogOmit
     notification?: NotificationOmit
+    passwordOtp?: PasswordOtpOmit
   }
 
   /* Types for Logging */
@@ -2020,6 +2103,7 @@ export namespace Prisma {
     orders: number
     reviews: number
     Notification: number
+    PasswordOtp: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2028,6 +2112,7 @@ export namespace Prisma {
     orders?: boolean | UserCountOutputTypeCountOrdersArgs
     reviews?: boolean | UserCountOutputTypeCountReviewsArgs
     Notification?: boolean | UserCountOutputTypeCountNotificationArgs
+    PasswordOtp?: boolean | UserCountOutputTypeCountPasswordOtpArgs
   }
 
   // Custom InputTypes
@@ -2074,6 +2159,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountNotificationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: NotificationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPasswordOtpArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PasswordOtpWhereInput
   }
 
 
@@ -2611,6 +2703,7 @@ export namespace Prisma {
     orders?: boolean | User$ordersArgs<ExtArgs>
     reviews?: boolean | User$reviewsArgs<ExtArgs>
     Notification?: boolean | User$NotificationArgs<ExtArgs>
+    PasswordOtp?: boolean | User$PasswordOtpArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2633,6 +2726,7 @@ export namespace Prisma {
     orders?: boolean | User$ordersArgs<ExtArgs>
     reviews?: boolean | User$reviewsArgs<ExtArgs>
     Notification?: boolean | User$NotificationArgs<ExtArgs>
+    PasswordOtp?: boolean | User$PasswordOtpArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -2644,6 +2738,7 @@ export namespace Prisma {
       orders: Prisma.$OrderPayload<ExtArgs>[]
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
       Notification: Prisma.$NotificationPayload<ExtArgs>[]
+      PasswordOtp: Prisma.$PasswordOtpPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -2998,6 +3093,7 @@ export namespace Prisma {
     orders<T extends User$ordersArgs<ExtArgs> = {}>(args?: Subset<T, User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviews<T extends User$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Notification<T extends User$NotificationArgs<ExtArgs> = {}>(args?: Subset<T, User$NotificationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    PasswordOtp<T extends User$PasswordOtpArgs<ExtArgs> = {}>(args?: Subset<T, User$PasswordOtpArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PasswordOtpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3494,6 +3590,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * User.PasswordOtp
+   */
+  export type User$PasswordOtpArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PasswordOtp
+     */
+    select?: PasswordOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PasswordOtp
+     */
+    omit?: PasswordOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PasswordOtpInclude<ExtArgs> | null
+    where?: PasswordOtpWhereInput
+    orderBy?: PasswordOtpOrderByWithRelationInput | PasswordOtpOrderByWithRelationInput[]
+    cursor?: PasswordOtpWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PasswordOtpScalarFieldEnum | PasswordOtpScalarFieldEnum[]
   }
 
   /**
@@ -16763,6 +16883,999 @@ export namespace Prisma {
 
 
   /**
+   * Model PasswordOtp
+   */
+
+  export type AggregatePasswordOtp = {
+    _count: PasswordOtpCountAggregateOutputType | null
+    _avg: PasswordOtpAvgAggregateOutputType | null
+    _sum: PasswordOtpSumAggregateOutputType | null
+    _min: PasswordOtpMinAggregateOutputType | null
+    _max: PasswordOtpMaxAggregateOutputType | null
+  }
+
+  export type PasswordOtpAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    attempts: number | null
+  }
+
+  export type PasswordOtpSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    attempts: number | null
+  }
+
+  export type PasswordOtpMinAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    codeHash: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    attempts: number | null
+    createdAt: Date | null
+  }
+
+  export type PasswordOtpMaxAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    codeHash: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    attempts: number | null
+    createdAt: Date | null
+  }
+
+  export type PasswordOtpCountAggregateOutputType = {
+    id: number
+    userId: number
+    codeHash: number
+    expiresAt: number
+    usedAt: number
+    attempts: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type PasswordOtpAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    attempts?: true
+  }
+
+  export type PasswordOtpSumAggregateInputType = {
+    id?: true
+    userId?: true
+    attempts?: true
+  }
+
+  export type PasswordOtpMinAggregateInputType = {
+    id?: true
+    userId?: true
+    codeHash?: true
+    expiresAt?: true
+    usedAt?: true
+    attempts?: true
+    createdAt?: true
+  }
+
+  export type PasswordOtpMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    codeHash?: true
+    expiresAt?: true
+    usedAt?: true
+    attempts?: true
+    createdAt?: true
+  }
+
+  export type PasswordOtpCountAggregateInputType = {
+    id?: true
+    userId?: true
+    codeHash?: true
+    expiresAt?: true
+    usedAt?: true
+    attempts?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type PasswordOtpAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PasswordOtp to aggregate.
+     */
+    where?: PasswordOtpWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PasswordOtps to fetch.
+     */
+    orderBy?: PasswordOtpOrderByWithRelationInput | PasswordOtpOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PasswordOtpWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PasswordOtps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PasswordOtps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PasswordOtps
+    **/
+    _count?: true | PasswordOtpCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PasswordOtpAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PasswordOtpSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PasswordOtpMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PasswordOtpMaxAggregateInputType
+  }
+
+  export type GetPasswordOtpAggregateType<T extends PasswordOtpAggregateArgs> = {
+        [P in keyof T & keyof AggregatePasswordOtp]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePasswordOtp[P]>
+      : GetScalarType<T[P], AggregatePasswordOtp[P]>
+  }
+
+
+
+
+  export type PasswordOtpGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PasswordOtpWhereInput
+    orderBy?: PasswordOtpOrderByWithAggregationInput | PasswordOtpOrderByWithAggregationInput[]
+    by: PasswordOtpScalarFieldEnum[] | PasswordOtpScalarFieldEnum
+    having?: PasswordOtpScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PasswordOtpCountAggregateInputType | true
+    _avg?: PasswordOtpAvgAggregateInputType
+    _sum?: PasswordOtpSumAggregateInputType
+    _min?: PasswordOtpMinAggregateInputType
+    _max?: PasswordOtpMaxAggregateInputType
+  }
+
+  export type PasswordOtpGroupByOutputType = {
+    id: number
+    userId: number
+    codeHash: string
+    expiresAt: Date
+    usedAt: Date | null
+    attempts: number
+    createdAt: Date
+    _count: PasswordOtpCountAggregateOutputType | null
+    _avg: PasswordOtpAvgAggregateOutputType | null
+    _sum: PasswordOtpSumAggregateOutputType | null
+    _min: PasswordOtpMinAggregateOutputType | null
+    _max: PasswordOtpMaxAggregateOutputType | null
+  }
+
+  type GetPasswordOtpGroupByPayload<T extends PasswordOtpGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PasswordOtpGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PasswordOtpGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PasswordOtpGroupByOutputType[P]>
+            : GetScalarType<T[P], PasswordOtpGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PasswordOtpSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    codeHash?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    attempts?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["passwordOtp"]>
+
+
+
+  export type PasswordOtpSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    codeHash?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    attempts?: boolean
+    createdAt?: boolean
+  }
+
+  export type PasswordOtpOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "codeHash" | "expiresAt" | "usedAt" | "attempts" | "createdAt", ExtArgs["result"]["passwordOtp"]>
+  export type PasswordOtpInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $PasswordOtpPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PasswordOtp"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      userId: number
+      codeHash: string
+      expiresAt: Date
+      usedAt: Date | null
+      attempts: number
+      createdAt: Date
+    }, ExtArgs["result"]["passwordOtp"]>
+    composites: {}
+  }
+
+  type PasswordOtpGetPayload<S extends boolean | null | undefined | PasswordOtpDefaultArgs> = $Result.GetResult<Prisma.$PasswordOtpPayload, S>
+
+  type PasswordOtpCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PasswordOtpFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PasswordOtpCountAggregateInputType | true
+    }
+
+  export interface PasswordOtpDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PasswordOtp'], meta: { name: 'PasswordOtp' } }
+    /**
+     * Find zero or one PasswordOtp that matches the filter.
+     * @param {PasswordOtpFindUniqueArgs} args - Arguments to find a PasswordOtp
+     * @example
+     * // Get one PasswordOtp
+     * const passwordOtp = await prisma.passwordOtp.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PasswordOtpFindUniqueArgs>(args: SelectSubset<T, PasswordOtpFindUniqueArgs<ExtArgs>>): Prisma__PasswordOtpClient<$Result.GetResult<Prisma.$PasswordOtpPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PasswordOtp that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PasswordOtpFindUniqueOrThrowArgs} args - Arguments to find a PasswordOtp
+     * @example
+     * // Get one PasswordOtp
+     * const passwordOtp = await prisma.passwordOtp.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PasswordOtpFindUniqueOrThrowArgs>(args: SelectSubset<T, PasswordOtpFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PasswordOtpClient<$Result.GetResult<Prisma.$PasswordOtpPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PasswordOtp that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasswordOtpFindFirstArgs} args - Arguments to find a PasswordOtp
+     * @example
+     * // Get one PasswordOtp
+     * const passwordOtp = await prisma.passwordOtp.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PasswordOtpFindFirstArgs>(args?: SelectSubset<T, PasswordOtpFindFirstArgs<ExtArgs>>): Prisma__PasswordOtpClient<$Result.GetResult<Prisma.$PasswordOtpPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PasswordOtp that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasswordOtpFindFirstOrThrowArgs} args - Arguments to find a PasswordOtp
+     * @example
+     * // Get one PasswordOtp
+     * const passwordOtp = await prisma.passwordOtp.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PasswordOtpFindFirstOrThrowArgs>(args?: SelectSubset<T, PasswordOtpFindFirstOrThrowArgs<ExtArgs>>): Prisma__PasswordOtpClient<$Result.GetResult<Prisma.$PasswordOtpPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PasswordOtps that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasswordOtpFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PasswordOtps
+     * const passwordOtps = await prisma.passwordOtp.findMany()
+     * 
+     * // Get first 10 PasswordOtps
+     * const passwordOtps = await prisma.passwordOtp.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const passwordOtpWithIdOnly = await prisma.passwordOtp.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PasswordOtpFindManyArgs>(args?: SelectSubset<T, PasswordOtpFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PasswordOtpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PasswordOtp.
+     * @param {PasswordOtpCreateArgs} args - Arguments to create a PasswordOtp.
+     * @example
+     * // Create one PasswordOtp
+     * const PasswordOtp = await prisma.passwordOtp.create({
+     *   data: {
+     *     // ... data to create a PasswordOtp
+     *   }
+     * })
+     * 
+     */
+    create<T extends PasswordOtpCreateArgs>(args: SelectSubset<T, PasswordOtpCreateArgs<ExtArgs>>): Prisma__PasswordOtpClient<$Result.GetResult<Prisma.$PasswordOtpPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PasswordOtps.
+     * @param {PasswordOtpCreateManyArgs} args - Arguments to create many PasswordOtps.
+     * @example
+     * // Create many PasswordOtps
+     * const passwordOtp = await prisma.passwordOtp.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PasswordOtpCreateManyArgs>(args?: SelectSubset<T, PasswordOtpCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PasswordOtp.
+     * @param {PasswordOtpDeleteArgs} args - Arguments to delete one PasswordOtp.
+     * @example
+     * // Delete one PasswordOtp
+     * const PasswordOtp = await prisma.passwordOtp.delete({
+     *   where: {
+     *     // ... filter to delete one PasswordOtp
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PasswordOtpDeleteArgs>(args: SelectSubset<T, PasswordOtpDeleteArgs<ExtArgs>>): Prisma__PasswordOtpClient<$Result.GetResult<Prisma.$PasswordOtpPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PasswordOtp.
+     * @param {PasswordOtpUpdateArgs} args - Arguments to update one PasswordOtp.
+     * @example
+     * // Update one PasswordOtp
+     * const passwordOtp = await prisma.passwordOtp.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PasswordOtpUpdateArgs>(args: SelectSubset<T, PasswordOtpUpdateArgs<ExtArgs>>): Prisma__PasswordOtpClient<$Result.GetResult<Prisma.$PasswordOtpPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PasswordOtps.
+     * @param {PasswordOtpDeleteManyArgs} args - Arguments to filter PasswordOtps to delete.
+     * @example
+     * // Delete a few PasswordOtps
+     * const { count } = await prisma.passwordOtp.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PasswordOtpDeleteManyArgs>(args?: SelectSubset<T, PasswordOtpDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PasswordOtps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasswordOtpUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PasswordOtps
+     * const passwordOtp = await prisma.passwordOtp.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PasswordOtpUpdateManyArgs>(args: SelectSubset<T, PasswordOtpUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PasswordOtp.
+     * @param {PasswordOtpUpsertArgs} args - Arguments to update or create a PasswordOtp.
+     * @example
+     * // Update or create a PasswordOtp
+     * const passwordOtp = await prisma.passwordOtp.upsert({
+     *   create: {
+     *     // ... data to create a PasswordOtp
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PasswordOtp we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PasswordOtpUpsertArgs>(args: SelectSubset<T, PasswordOtpUpsertArgs<ExtArgs>>): Prisma__PasswordOtpClient<$Result.GetResult<Prisma.$PasswordOtpPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PasswordOtps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasswordOtpCountArgs} args - Arguments to filter PasswordOtps to count.
+     * @example
+     * // Count the number of PasswordOtps
+     * const count = await prisma.passwordOtp.count({
+     *   where: {
+     *     // ... the filter for the PasswordOtps we want to count
+     *   }
+     * })
+    **/
+    count<T extends PasswordOtpCountArgs>(
+      args?: Subset<T, PasswordOtpCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PasswordOtpCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PasswordOtp.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasswordOtpAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PasswordOtpAggregateArgs>(args: Subset<T, PasswordOtpAggregateArgs>): Prisma.PrismaPromise<GetPasswordOtpAggregateType<T>>
+
+    /**
+     * Group by PasswordOtp.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasswordOtpGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PasswordOtpGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PasswordOtpGroupByArgs['orderBy'] }
+        : { orderBy?: PasswordOtpGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PasswordOtpGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPasswordOtpGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PasswordOtp model
+   */
+  readonly fields: PasswordOtpFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PasswordOtp.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PasswordOtpClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PasswordOtp model
+   */
+  interface PasswordOtpFieldRefs {
+    readonly id: FieldRef<"PasswordOtp", 'Int'>
+    readonly userId: FieldRef<"PasswordOtp", 'Int'>
+    readonly codeHash: FieldRef<"PasswordOtp", 'String'>
+    readonly expiresAt: FieldRef<"PasswordOtp", 'DateTime'>
+    readonly usedAt: FieldRef<"PasswordOtp", 'DateTime'>
+    readonly attempts: FieldRef<"PasswordOtp", 'Int'>
+    readonly createdAt: FieldRef<"PasswordOtp", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PasswordOtp findUnique
+   */
+  export type PasswordOtpFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PasswordOtp
+     */
+    select?: PasswordOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PasswordOtp
+     */
+    omit?: PasswordOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PasswordOtpInclude<ExtArgs> | null
+    /**
+     * Filter, which PasswordOtp to fetch.
+     */
+    where: PasswordOtpWhereUniqueInput
+  }
+
+  /**
+   * PasswordOtp findUniqueOrThrow
+   */
+  export type PasswordOtpFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PasswordOtp
+     */
+    select?: PasswordOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PasswordOtp
+     */
+    omit?: PasswordOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PasswordOtpInclude<ExtArgs> | null
+    /**
+     * Filter, which PasswordOtp to fetch.
+     */
+    where: PasswordOtpWhereUniqueInput
+  }
+
+  /**
+   * PasswordOtp findFirst
+   */
+  export type PasswordOtpFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PasswordOtp
+     */
+    select?: PasswordOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PasswordOtp
+     */
+    omit?: PasswordOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PasswordOtpInclude<ExtArgs> | null
+    /**
+     * Filter, which PasswordOtp to fetch.
+     */
+    where?: PasswordOtpWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PasswordOtps to fetch.
+     */
+    orderBy?: PasswordOtpOrderByWithRelationInput | PasswordOtpOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PasswordOtps.
+     */
+    cursor?: PasswordOtpWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PasswordOtps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PasswordOtps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PasswordOtps.
+     */
+    distinct?: PasswordOtpScalarFieldEnum | PasswordOtpScalarFieldEnum[]
+  }
+
+  /**
+   * PasswordOtp findFirstOrThrow
+   */
+  export type PasswordOtpFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PasswordOtp
+     */
+    select?: PasswordOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PasswordOtp
+     */
+    omit?: PasswordOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PasswordOtpInclude<ExtArgs> | null
+    /**
+     * Filter, which PasswordOtp to fetch.
+     */
+    where?: PasswordOtpWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PasswordOtps to fetch.
+     */
+    orderBy?: PasswordOtpOrderByWithRelationInput | PasswordOtpOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PasswordOtps.
+     */
+    cursor?: PasswordOtpWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PasswordOtps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PasswordOtps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PasswordOtps.
+     */
+    distinct?: PasswordOtpScalarFieldEnum | PasswordOtpScalarFieldEnum[]
+  }
+
+  /**
+   * PasswordOtp findMany
+   */
+  export type PasswordOtpFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PasswordOtp
+     */
+    select?: PasswordOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PasswordOtp
+     */
+    omit?: PasswordOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PasswordOtpInclude<ExtArgs> | null
+    /**
+     * Filter, which PasswordOtps to fetch.
+     */
+    where?: PasswordOtpWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PasswordOtps to fetch.
+     */
+    orderBy?: PasswordOtpOrderByWithRelationInput | PasswordOtpOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PasswordOtps.
+     */
+    cursor?: PasswordOtpWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PasswordOtps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PasswordOtps.
+     */
+    skip?: number
+    distinct?: PasswordOtpScalarFieldEnum | PasswordOtpScalarFieldEnum[]
+  }
+
+  /**
+   * PasswordOtp create
+   */
+  export type PasswordOtpCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PasswordOtp
+     */
+    select?: PasswordOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PasswordOtp
+     */
+    omit?: PasswordOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PasswordOtpInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PasswordOtp.
+     */
+    data: XOR<PasswordOtpCreateInput, PasswordOtpUncheckedCreateInput>
+  }
+
+  /**
+   * PasswordOtp createMany
+   */
+  export type PasswordOtpCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PasswordOtps.
+     */
+    data: PasswordOtpCreateManyInput | PasswordOtpCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PasswordOtp update
+   */
+  export type PasswordOtpUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PasswordOtp
+     */
+    select?: PasswordOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PasswordOtp
+     */
+    omit?: PasswordOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PasswordOtpInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PasswordOtp.
+     */
+    data: XOR<PasswordOtpUpdateInput, PasswordOtpUncheckedUpdateInput>
+    /**
+     * Choose, which PasswordOtp to update.
+     */
+    where: PasswordOtpWhereUniqueInput
+  }
+
+  /**
+   * PasswordOtp updateMany
+   */
+  export type PasswordOtpUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PasswordOtps.
+     */
+    data: XOR<PasswordOtpUpdateManyMutationInput, PasswordOtpUncheckedUpdateManyInput>
+    /**
+     * Filter which PasswordOtps to update
+     */
+    where?: PasswordOtpWhereInput
+    /**
+     * Limit how many PasswordOtps to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PasswordOtp upsert
+   */
+  export type PasswordOtpUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PasswordOtp
+     */
+    select?: PasswordOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PasswordOtp
+     */
+    omit?: PasswordOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PasswordOtpInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PasswordOtp to update in case it exists.
+     */
+    where: PasswordOtpWhereUniqueInput
+    /**
+     * In case the PasswordOtp found by the `where` argument doesn't exist, create a new PasswordOtp with this data.
+     */
+    create: XOR<PasswordOtpCreateInput, PasswordOtpUncheckedCreateInput>
+    /**
+     * In case the PasswordOtp was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PasswordOtpUpdateInput, PasswordOtpUncheckedUpdateInput>
+  }
+
+  /**
+   * PasswordOtp delete
+   */
+  export type PasswordOtpDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PasswordOtp
+     */
+    select?: PasswordOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PasswordOtp
+     */
+    omit?: PasswordOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PasswordOtpInclude<ExtArgs> | null
+    /**
+     * Filter which PasswordOtp to delete.
+     */
+    where: PasswordOtpWhereUniqueInput
+  }
+
+  /**
+   * PasswordOtp deleteMany
+   */
+  export type PasswordOtpDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PasswordOtps to delete
+     */
+    where?: PasswordOtpWhereInput
+    /**
+     * Limit how many PasswordOtps to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PasswordOtp without action
+   */
+  export type PasswordOtpDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PasswordOtp
+     */
+    select?: PasswordOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PasswordOtp
+     */
+    omit?: PasswordOtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PasswordOtpInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -16942,6 +18055,19 @@ export namespace Prisma {
   export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
+  export const PasswordOtpScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    codeHash: 'codeHash',
+    expiresAt: 'expiresAt',
+    usedAt: 'usedAt',
+    attempts: 'attempts',
+    createdAt: 'createdAt'
+  };
+
+  export type PasswordOtpScalarFieldEnum = (typeof PasswordOtpScalarFieldEnum)[keyof typeof PasswordOtpScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -17040,6 +18166,13 @@ export namespace Prisma {
   export type NotificationOrderByRelevanceFieldEnum = (typeof NotificationOrderByRelevanceFieldEnum)[keyof typeof NotificationOrderByRelevanceFieldEnum]
 
 
+  export const PasswordOtpOrderByRelevanceFieldEnum: {
+    codeHash: 'codeHash'
+  };
+
+  export type PasswordOtpOrderByRelevanceFieldEnum = (typeof PasswordOtpOrderByRelevanceFieldEnum)[keyof typeof PasswordOtpOrderByRelevanceFieldEnum]
+
+
   /**
    * Field references
    */
@@ -17134,6 +18267,7 @@ export namespace Prisma {
     orders?: OrderListRelationFilter
     reviews?: ReviewListRelationFilter
     Notification?: NotificationListRelationFilter
+    PasswordOtp?: PasswordOtpListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -17149,6 +18283,7 @@ export namespace Prisma {
     orders?: OrderOrderByRelationAggregateInput
     reviews?: ReviewOrderByRelationAggregateInput
     Notification?: NotificationOrderByRelationAggregateInput
+    PasswordOtp?: PasswordOtpOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -17168,6 +18303,7 @@ export namespace Prisma {
     orders?: OrderListRelationFilter
     reviews?: ReviewListRelationFilter
     Notification?: NotificationListRelationFilter
+    PasswordOtp?: PasswordOtpListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -18064,6 +19200,74 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Notification"> | Date | string
   }
 
+  export type PasswordOtpWhereInput = {
+    AND?: PasswordOtpWhereInput | PasswordOtpWhereInput[]
+    OR?: PasswordOtpWhereInput[]
+    NOT?: PasswordOtpWhereInput | PasswordOtpWhereInput[]
+    id?: IntFilter<"PasswordOtp"> | number
+    userId?: IntFilter<"PasswordOtp"> | number
+    codeHash?: StringFilter<"PasswordOtp"> | string
+    expiresAt?: DateTimeFilter<"PasswordOtp"> | Date | string
+    usedAt?: DateTimeNullableFilter<"PasswordOtp"> | Date | string | null
+    attempts?: IntFilter<"PasswordOtp"> | number
+    createdAt?: DateTimeFilter<"PasswordOtp"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type PasswordOtpOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    codeHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    attempts?: SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    _relevance?: PasswordOtpOrderByRelevanceInput
+  }
+
+  export type PasswordOtpWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: PasswordOtpWhereInput | PasswordOtpWhereInput[]
+    OR?: PasswordOtpWhereInput[]
+    NOT?: PasswordOtpWhereInput | PasswordOtpWhereInput[]
+    userId?: IntFilter<"PasswordOtp"> | number
+    codeHash?: StringFilter<"PasswordOtp"> | string
+    expiresAt?: DateTimeFilter<"PasswordOtp"> | Date | string
+    usedAt?: DateTimeNullableFilter<"PasswordOtp"> | Date | string | null
+    attempts?: IntFilter<"PasswordOtp"> | number
+    createdAt?: DateTimeFilter<"PasswordOtp"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type PasswordOtpOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    codeHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    attempts?: SortOrder
+    createdAt?: SortOrder
+    _count?: PasswordOtpCountOrderByAggregateInput
+    _avg?: PasswordOtpAvgOrderByAggregateInput
+    _max?: PasswordOtpMaxOrderByAggregateInput
+    _min?: PasswordOtpMinOrderByAggregateInput
+    _sum?: PasswordOtpSumOrderByAggregateInput
+  }
+
+  export type PasswordOtpScalarWhereWithAggregatesInput = {
+    AND?: PasswordOtpScalarWhereWithAggregatesInput | PasswordOtpScalarWhereWithAggregatesInput[]
+    OR?: PasswordOtpScalarWhereWithAggregatesInput[]
+    NOT?: PasswordOtpScalarWhereWithAggregatesInput | PasswordOtpScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"PasswordOtp"> | number
+    userId?: IntWithAggregatesFilter<"PasswordOtp"> | number
+    codeHash?: StringWithAggregatesFilter<"PasswordOtp"> | string
+    expiresAt?: DateTimeWithAggregatesFilter<"PasswordOtp"> | Date | string
+    usedAt?: DateTimeNullableWithAggregatesFilter<"PasswordOtp"> | Date | string | null
+    attempts?: IntWithAggregatesFilter<"PasswordOtp"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"PasswordOtp"> | Date | string
+  }
+
   export type UserCreateInput = {
     name: string
     email: string
@@ -18076,6 +19280,7 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
+    PasswordOtp?: PasswordOtpCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -18091,6 +19296,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    PasswordOtp?: PasswordOtpUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -18105,6 +19311,7 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
+    PasswordOtp?: PasswordOtpUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -18120,6 +19327,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    PasswordOtp?: PasswordOtpUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -18952,6 +20160,72 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PasswordOtpCreateInput = {
+    codeHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    attempts?: number
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutPasswordOtpInput
+  }
+
+  export type PasswordOtpUncheckedCreateInput = {
+    id?: number
+    userId: number
+    codeHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    attempts?: number
+    createdAt?: Date | string
+  }
+
+  export type PasswordOtpUpdateInput = {
+    codeHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attempts?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPasswordOtpNestedInput
+  }
+
+  export type PasswordOtpUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    codeHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attempts?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PasswordOtpCreateManyInput = {
+    id?: number
+    userId: number
+    codeHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    attempts?: number
+    createdAt?: Date | string
+  }
+
+  export type PasswordOtpUpdateManyMutationInput = {
+    codeHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attempts?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PasswordOtpUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    codeHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attempts?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -19026,6 +20300,12 @@ export namespace Prisma {
     none?: NotificationWhereInput
   }
 
+  export type PasswordOtpListRelationFilter = {
+    every?: PasswordOtpWhereInput
+    some?: PasswordOtpWhereInput
+    none?: PasswordOtpWhereInput
+  }
+
   export type AddressOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -19043,6 +20323,10 @@ export namespace Prisma {
   }
 
   export type NotificationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PasswordOtpOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19994,6 +21278,79 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type PasswordOtpOrderByRelevanceInput = {
+    fields: PasswordOtpOrderByRelevanceFieldEnum | PasswordOtpOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type PasswordOtpCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    codeHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    attempts?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PasswordOtpAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    attempts?: SortOrder
+  }
+
+  export type PasswordOtpMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    codeHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    attempts?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PasswordOtpMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    codeHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    attempts?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PasswordOtpSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    attempts?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type AddressCreateNestedManyWithoutUserInput = {
     create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
@@ -20029,6 +21386,13 @@ export namespace Prisma {
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
+  export type PasswordOtpCreateNestedManyWithoutUserInput = {
+    create?: XOR<PasswordOtpCreateWithoutUserInput, PasswordOtpUncheckedCreateWithoutUserInput> | PasswordOtpCreateWithoutUserInput[] | PasswordOtpUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PasswordOtpCreateOrConnectWithoutUserInput | PasswordOtpCreateOrConnectWithoutUserInput[]
+    createMany?: PasswordOtpCreateManyUserInputEnvelope
+    connect?: PasswordOtpWhereUniqueInput | PasswordOtpWhereUniqueInput[]
+  }
+
   export type AddressUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
@@ -20062,6 +21426,13 @@ export namespace Prisma {
     connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
     createMany?: NotificationCreateManyUserInputEnvelope
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
+  export type PasswordOtpUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PasswordOtpCreateWithoutUserInput, PasswordOtpUncheckedCreateWithoutUserInput> | PasswordOtpCreateWithoutUserInput[] | PasswordOtpUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PasswordOtpCreateOrConnectWithoutUserInput | PasswordOtpCreateOrConnectWithoutUserInput[]
+    createMany?: PasswordOtpCreateManyUserInputEnvelope
+    connect?: PasswordOtpWhereUniqueInput | PasswordOtpWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -20146,6 +21517,20 @@ export namespace Prisma {
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
+  export type PasswordOtpUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PasswordOtpCreateWithoutUserInput, PasswordOtpUncheckedCreateWithoutUserInput> | PasswordOtpCreateWithoutUserInput[] | PasswordOtpUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PasswordOtpCreateOrConnectWithoutUserInput | PasswordOtpCreateOrConnectWithoutUserInput[]
+    upsert?: PasswordOtpUpsertWithWhereUniqueWithoutUserInput | PasswordOtpUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PasswordOtpCreateManyUserInputEnvelope
+    set?: PasswordOtpWhereUniqueInput | PasswordOtpWhereUniqueInput[]
+    disconnect?: PasswordOtpWhereUniqueInput | PasswordOtpWhereUniqueInput[]
+    delete?: PasswordOtpWhereUniqueInput | PasswordOtpWhereUniqueInput[]
+    connect?: PasswordOtpWhereUniqueInput | PasswordOtpWhereUniqueInput[]
+    update?: PasswordOtpUpdateWithWhereUniqueWithoutUserInput | PasswordOtpUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PasswordOtpUpdateManyWithWhereWithoutUserInput | PasswordOtpUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PasswordOtpScalarWhereInput | PasswordOtpScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -20222,6 +21607,20 @@ export namespace Prisma {
     update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
+  export type PasswordOtpUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PasswordOtpCreateWithoutUserInput, PasswordOtpUncheckedCreateWithoutUserInput> | PasswordOtpCreateWithoutUserInput[] | PasswordOtpUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PasswordOtpCreateOrConnectWithoutUserInput | PasswordOtpCreateOrConnectWithoutUserInput[]
+    upsert?: PasswordOtpUpsertWithWhereUniqueWithoutUserInput | PasswordOtpUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PasswordOtpCreateManyUserInputEnvelope
+    set?: PasswordOtpWhereUniqueInput | PasswordOtpWhereUniqueInput[]
+    disconnect?: PasswordOtpWhereUniqueInput | PasswordOtpWhereUniqueInput[]
+    delete?: PasswordOtpWhereUniqueInput | PasswordOtpWhereUniqueInput[]
+    connect?: PasswordOtpWhereUniqueInput | PasswordOtpWhereUniqueInput[]
+    update?: PasswordOtpUpdateWithWhereUniqueWithoutUserInput | PasswordOtpUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PasswordOtpUpdateManyWithWhereWithoutUserInput | PasswordOtpUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PasswordOtpScalarWhereInput | PasswordOtpScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutAddressesInput = {
@@ -21178,6 +22577,24 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotificationInput, UserUpdateWithoutNotificationInput>, UserUncheckedUpdateWithoutNotificationInput>
   }
 
+  export type UserCreateNestedOneWithoutPasswordOtpInput = {
+    create?: XOR<UserCreateWithoutPasswordOtpInput, UserUncheckedCreateWithoutPasswordOtpInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPasswordOtpInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type UserUpdateOneRequiredWithoutPasswordOtpNestedInput = {
+    create?: XOR<UserCreateWithoutPasswordOtpInput, UserUncheckedCreateWithoutPasswordOtpInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPasswordOtpInput
+    upsert?: UserUpsertWithoutPasswordOtpInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPasswordOtpInput, UserUpdateWithoutPasswordOtpInput>, UserUncheckedUpdateWithoutPasswordOtpInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -21459,6 +22876,31 @@ export namespace Prisma {
     _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type AddressCreateWithoutUserInput = {
     city: string
     street: string
@@ -21603,6 +23045,33 @@ export namespace Prisma {
 
   export type NotificationCreateManyUserInputEnvelope = {
     data: NotificationCreateManyUserInput | NotificationCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PasswordOtpCreateWithoutUserInput = {
+    codeHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    attempts?: number
+    createdAt?: Date | string
+  }
+
+  export type PasswordOtpUncheckedCreateWithoutUserInput = {
+    id?: number
+    codeHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    attempts?: number
+    createdAt?: Date | string
+  }
+
+  export type PasswordOtpCreateOrConnectWithoutUserInput = {
+    where: PasswordOtpWhereUniqueInput
+    create: XOR<PasswordOtpCreateWithoutUserInput, PasswordOtpUncheckedCreateWithoutUserInput>
+  }
+
+  export type PasswordOtpCreateManyUserInputEnvelope = {
+    data: PasswordOtpCreateManyUserInput | PasswordOtpCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -21753,6 +23222,35 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Notification"> | Date | string
   }
 
+  export type PasswordOtpUpsertWithWhereUniqueWithoutUserInput = {
+    where: PasswordOtpWhereUniqueInput
+    update: XOR<PasswordOtpUpdateWithoutUserInput, PasswordOtpUncheckedUpdateWithoutUserInput>
+    create: XOR<PasswordOtpCreateWithoutUserInput, PasswordOtpUncheckedCreateWithoutUserInput>
+  }
+
+  export type PasswordOtpUpdateWithWhereUniqueWithoutUserInput = {
+    where: PasswordOtpWhereUniqueInput
+    data: XOR<PasswordOtpUpdateWithoutUserInput, PasswordOtpUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PasswordOtpUpdateManyWithWhereWithoutUserInput = {
+    where: PasswordOtpScalarWhereInput
+    data: XOR<PasswordOtpUpdateManyMutationInput, PasswordOtpUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PasswordOtpScalarWhereInput = {
+    AND?: PasswordOtpScalarWhereInput | PasswordOtpScalarWhereInput[]
+    OR?: PasswordOtpScalarWhereInput[]
+    NOT?: PasswordOtpScalarWhereInput | PasswordOtpScalarWhereInput[]
+    id?: IntFilter<"PasswordOtp"> | number
+    userId?: IntFilter<"PasswordOtp"> | number
+    codeHash?: StringFilter<"PasswordOtp"> | string
+    expiresAt?: DateTimeFilter<"PasswordOtp"> | Date | string
+    usedAt?: DateTimeNullableFilter<"PasswordOtp"> | Date | string | null
+    attempts?: IntFilter<"PasswordOtp"> | number
+    createdAt?: DateTimeFilter<"PasswordOtp"> | Date | string
+  }
+
   export type UserCreateWithoutAddressesInput = {
     name: string
     email: string
@@ -21764,6 +23262,7 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
+    PasswordOtp?: PasswordOtpCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAddressesInput = {
@@ -21778,6 +23277,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    PasswordOtp?: PasswordOtpUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAddressesInput = {
@@ -21844,6 +23344,7 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
+    PasswordOtp?: PasswordOtpUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAddressesInput = {
@@ -21858,6 +23359,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    PasswordOtp?: PasswordOtpUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderUpsertWithWhereUniqueWithoutAddressInput = {
@@ -22568,6 +24070,7 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
+    PasswordOtp?: PasswordOtpCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCartItemsInput = {
@@ -22582,6 +24085,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    PasswordOtp?: PasswordOtpUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCartItemsInput = {
@@ -22686,6 +24190,7 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
+    PasswordOtp?: PasswordOtpUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCartItemsInput = {
@@ -22700,6 +24205,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    PasswordOtp?: PasswordOtpUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductUpsertWithoutCartItemsInput = {
@@ -23214,6 +24720,7 @@ export namespace Prisma {
     cartItems?: CartItemCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
+    PasswordOtp?: PasswordOtpCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -23228,6 +24735,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    PasswordOtp?: PasswordOtpUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -23337,6 +24845,7 @@ export namespace Prisma {
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
+    PasswordOtp?: PasswordOtpUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -23351,6 +24860,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    PasswordOtp?: PasswordOtpUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AddressUpsertWithoutOrderInput = {
@@ -23443,6 +24953,7 @@ export namespace Prisma {
     cartItems?: CartItemCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
+    PasswordOtp?: PasswordOtpCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -23457,6 +24968,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    PasswordOtp?: PasswordOtpUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -23522,6 +25034,7 @@ export namespace Prisma {
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
+    PasswordOtp?: PasswordOtpUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -23536,6 +25049,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    PasswordOtp?: PasswordOtpUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductUpsertWithoutReviewsInput = {
@@ -23661,6 +25175,7 @@ export namespace Prisma {
     cartItems?: CartItemCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    PasswordOtp?: PasswordOtpCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutNotificationInput = {
@@ -23675,6 +25190,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    PasswordOtp?: PasswordOtpUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationInput = {
@@ -23704,6 +25220,7 @@ export namespace Prisma {
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    PasswordOtp?: PasswordOtpUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationInput = {
@@ -23718,6 +25235,81 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    PasswordOtp?: PasswordOtpUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutPasswordOtpInput = {
+    name: string
+    email: string
+    phone: string
+    password: string
+    role?: $Enums.Role
+    createdAt?: Date | string
+    addresses?: AddressCreateNestedManyWithoutUserInput
+    cartItems?: CartItemCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    Notification?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutPasswordOtpInput = {
+    id?: number
+    name: string
+    email: string
+    phone: string
+    password: string
+    role?: $Enums.Role
+    createdAt?: Date | string
+    addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
+    cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPasswordOtpInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPasswordOtpInput, UserUncheckedCreateWithoutPasswordOtpInput>
+  }
+
+  export type UserUpsertWithoutPasswordOtpInput = {
+    update: XOR<UserUpdateWithoutPasswordOtpInput, UserUncheckedUpdateWithoutPasswordOtpInput>
+    create: XOR<UserCreateWithoutPasswordOtpInput, UserUncheckedCreateWithoutPasswordOtpInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPasswordOtpInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPasswordOtpInput, UserUncheckedUpdateWithoutPasswordOtpInput>
+  }
+
+  export type UserUpdateWithoutPasswordOtpInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    addresses?: AddressUpdateManyWithoutUserNestedInput
+    cartItems?: CartItemUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    Notification?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPasswordOtpInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
+    cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AddressCreateManyUserInput = {
@@ -23764,6 +25356,15 @@ export namespace Prisma {
     title: string
     body: string
     isRead?: boolean
+    createdAt?: Date | string
+  }
+
+  export type PasswordOtpCreateManyUserInput = {
+    id?: number
+    codeHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    attempts?: number
     createdAt?: Date | string
   }
 
@@ -23908,6 +25509,32 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PasswordOtpUpdateWithoutUserInput = {
+    codeHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attempts?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PasswordOtpUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    codeHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attempts?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PasswordOtpUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    codeHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attempts?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
