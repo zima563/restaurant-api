@@ -18,7 +18,7 @@ export class AuthController {
   private setRefreshCookie(res: Response, token: string) {
     res.cookie('rt', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // خليها true في HTTPS
+      secure: true, // خليها true في HTTPS
       sameSite: 'strict',
       maxAge: Number(process.env.JWT_REFRESH_TTL || 60 * 60 * 24 * 7) * 1000,
       path: '/', // غيّرها لو عايز تقيد المسار

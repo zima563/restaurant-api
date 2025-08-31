@@ -17,6 +17,7 @@ import { PaymobController } from './paymob/paymob.controller';
 import { PaymobModule } from './paymob/paymob.module';
 import { NotificationModule } from './notification/notification.module';
 import { ConfigModule } from '@nestjs/config';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ConfigModule } from '@nestjs/config';
     AddressModule,
     PaymobModule,
     NotificationModule,
+    FavoritesModule,
     ConfigModule.forRoot({
       isGlobal: true, // 👈 يخليها متاحة في كل المشروع
     }),

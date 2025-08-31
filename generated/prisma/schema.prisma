@@ -31,6 +31,7 @@ model User {
   Notification Notification[]
 
   PasswordOtp PasswordOtp[]
+  Favorite    Favorite[]
 }
 
 model Address {
@@ -72,6 +73,20 @@ model Product {
   orderItems  OrderItem[]
   reviews     Review[]
   createdAt   DateTime       @default(now())
+  favoritedBy Favorite[]
+}
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId]) // كل منتج مرة واحدة لكل مستخدم
+  @@index([userId])
+  @@index([productId])
 }
 
 model ProductSize {

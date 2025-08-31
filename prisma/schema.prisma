@@ -30,10 +30,9 @@ model User {
   createdAt    DateTime       @default(now())
   Notification Notification[]
 
-  PasswordOtp  PasswordOtp[] 
+  PasswordOtp PasswordOtp[]
+  Favorite    Favorite[]
 }
-
-
 
 model Address {
   id        Int      @id @default(autoincrement())
@@ -74,6 +73,20 @@ model Product {
   orderItems  OrderItem[]
   reviews     Review[]
   createdAt   DateTime       @default(now())
+  favoritedBy Favorite[]
+}
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId]) // كل منتج مرة واحدة لكل مستخدم
+  @@index([userId])
+  @@index([productId])
 }
 
 model ProductSize {
@@ -220,14 +233,14 @@ enum FoodType {
 }
 
 model PasswordOtp {
-  id          Int      @id @default(autoincrement())
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int
-  codeHash    String
-  expiresAt   DateTime
-  usedAt      DateTime?
-  attempts    Int      @default(0)
-  createdAt   DateTime @default(now())
+  id        Int       @id @default(autoincrement())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  codeHash  String
+  expiresAt DateTime
+  usedAt    DateTime?
+  attempts  Int       @default(0)
+  createdAt DateTime  @default(now())
 
   @@index([userId])
   @@index([codeHash])

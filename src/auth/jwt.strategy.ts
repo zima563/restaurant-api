@@ -5,9 +5,13 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
+    const secret = process.env.JWT_ACCESS_SECRET || 'super-access-secret';
+    if (!secret) {
+      throw new Error('JWT secret is not defined');
+    }
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_SECRET || 'supersecret',
+      secretOrKey: secret, // fallback لو عندك secret واحد
     });
   }
 
