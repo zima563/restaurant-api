@@ -29,7 +29,11 @@ model User {
   reviews      Review[]
   createdAt    DateTime       @default(now())
   Notification Notification[]
+
+  PasswordOtp  PasswordOtp[] 
 }
+
+
 
 model Address {
   id        Int      @id @default(autoincrement())
@@ -213,4 +217,18 @@ enum FoodType {
   PASTA // مكرونة
   SEAFOOD // مأكولات بحرية
   OTHERS // أخرى
+}
+
+model PasswordOtp {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  codeHash    String
+  expiresAt   DateTime
+  usedAt      DateTime?
+  attempts    Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([codeHash])
 }

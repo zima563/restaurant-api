@@ -242,6 +242,16 @@ exports.Prisma.NotificationScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.PasswordOtpScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  codeHash: 'codeHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  attempts: 'attempts',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -304,6 +314,10 @@ exports.Prisma.NotificationOrderByRelevanceFieldEnum = {
   title: 'title',
   body: 'body'
 };
+
+exports.Prisma.PasswordOtpOrderByRelevanceFieldEnum = {
+  codeHash: 'codeHash'
+};
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
   ADMIN: 'ADMIN'
@@ -353,7 +367,8 @@ exports.Prisma.ModelName = {
   Order: 'Order',
   Review: 'Review',
   OrderStatusLog: 'OrderStatusLog',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  PasswordOtp: 'PasswordOtp'
 };
 
 /**
