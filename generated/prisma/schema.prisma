@@ -5,8 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-1.1.x"]
 }
 
 datasource db {
@@ -21,6 +22,7 @@ model User {
   phone        String
   password     String
   role         Role           @default(USER)
+  refreshToken String?
   addresses    Address[]
   cartItems    CartItem[]
   orders       Order[]

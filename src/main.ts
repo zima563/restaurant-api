@@ -5,9 +5,12 @@ import * as express from 'express';
 import { join } from 'path';
 import * as os from 'os';
 import * as dns from 'dns';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use(cookieParser());
 
   // ✅ CORS settings
   app.enableCors({

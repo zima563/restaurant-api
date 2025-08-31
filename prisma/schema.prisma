@@ -22,6 +22,7 @@ model User {
   phone        String
   password     String
   role         Role           @default(USER)
+  refreshToken String?
   addresses    Address[]
   cartItems    CartItem[]
   orders       Order[]
