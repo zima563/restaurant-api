@@ -53,7 +53,11 @@ async function bootstrap() {
   // ✅ Pipes & Static
   app.useGlobalPipes(
     new ValidationPipe({
+      whitelist: true,
       transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
     }),
   );
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));

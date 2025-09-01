@@ -74,6 +74,9 @@ model Product {
   reviews     Review[]
   createdAt   DateTime       @default(now())
   favoritedBy Favorite[]
+
+  ratingAverage Float @default(0)
+  ratingCount   Int   @default(0)
 }
 
 model Favorite {
@@ -168,14 +171,21 @@ model Order {
 }
 
 model Review {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
-  rating    Int
-  comment   String?
+
+  rating  Int
+  comment String? @db.Text
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, productId]) // مراجعة واحدة لكل مستخدم لكل منتج
+  @@index([productId])
+  @@index([userId])
 }
 
 model OrderStatusLog {

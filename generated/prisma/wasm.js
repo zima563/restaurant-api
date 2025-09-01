@@ -157,7 +157,9 @@ exports.Prisma.ProductScalarFieldEnum = {
   isAvailable: 'isAvailable',
   categoryId: 'categoryId',
   foodType: 'foodType',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  ratingAverage: 'ratingAverage',
+  ratingCount: 'ratingCount'
 };
 
 exports.Prisma.FavoriteScalarFieldEnum = {
@@ -229,7 +231,8 @@ exports.Prisma.ReviewScalarFieldEnum = {
   productId: 'productId',
   rating: 'rating',
   comment: 'comment',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.OrderStatusLogScalarFieldEnum = {

@@ -5821,12 +5821,16 @@ export namespace Prisma {
     id: number | null
     price: number | null
     categoryId: number | null
+    ratingAverage: number | null
+    ratingCount: number | null
   }
 
   export type ProductSumAggregateOutputType = {
     id: number | null
     price: number | null
     categoryId: number | null
+    ratingAverage: number | null
+    ratingCount: number | null
   }
 
   export type ProductMinAggregateOutputType = {
@@ -5839,6 +5843,8 @@ export namespace Prisma {
     categoryId: number | null
     foodType: $Enums.FoodType | null
     createdAt: Date | null
+    ratingAverage: number | null
+    ratingCount: number | null
   }
 
   export type ProductMaxAggregateOutputType = {
@@ -5851,6 +5857,8 @@ export namespace Prisma {
     categoryId: number | null
     foodType: $Enums.FoodType | null
     createdAt: Date | null
+    ratingAverage: number | null
+    ratingCount: number | null
   }
 
   export type ProductCountAggregateOutputType = {
@@ -5863,6 +5871,8 @@ export namespace Prisma {
     categoryId: number
     foodType: number
     createdAt: number
+    ratingAverage: number
+    ratingCount: number
     _all: number
   }
 
@@ -5871,12 +5881,16 @@ export namespace Prisma {
     id?: true
     price?: true
     categoryId?: true
+    ratingAverage?: true
+    ratingCount?: true
   }
 
   export type ProductSumAggregateInputType = {
     id?: true
     price?: true
     categoryId?: true
+    ratingAverage?: true
+    ratingCount?: true
   }
 
   export type ProductMinAggregateInputType = {
@@ -5889,6 +5903,8 @@ export namespace Prisma {
     categoryId?: true
     foodType?: true
     createdAt?: true
+    ratingAverage?: true
+    ratingCount?: true
   }
 
   export type ProductMaxAggregateInputType = {
@@ -5901,6 +5917,8 @@ export namespace Prisma {
     categoryId?: true
     foodType?: true
     createdAt?: true
+    ratingAverage?: true
+    ratingCount?: true
   }
 
   export type ProductCountAggregateInputType = {
@@ -5913,6 +5931,8 @@ export namespace Prisma {
     categoryId?: true
     foodType?: true
     createdAt?: true
+    ratingAverage?: true
+    ratingCount?: true
     _all?: true
   }
 
@@ -6012,6 +6032,8 @@ export namespace Prisma {
     categoryId: number
     foodType: $Enums.FoodType
     createdAt: Date
+    ratingAverage: number
+    ratingCount: number
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
     _sum: ProductSumAggregateOutputType | null
@@ -6043,6 +6065,8 @@ export namespace Prisma {
     categoryId?: boolean
     foodType?: boolean
     createdAt?: boolean
+    ratingAverage?: boolean
+    ratingCount?: boolean
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     sizes?: boolean | Product$sizesArgs<ExtArgs>
     addons?: boolean | Product$addonsArgs<ExtArgs>
@@ -6065,9 +6089,11 @@ export namespace Prisma {
     categoryId?: boolean
     foodType?: boolean
     createdAt?: boolean
+    ratingAverage?: boolean
+    ratingCount?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "imageUrl" | "isAvailable" | "categoryId" | "foodType" | "createdAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "imageUrl" | "isAvailable" | "categoryId" | "foodType" | "createdAt" | "ratingAverage" | "ratingCount", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     sizes?: boolean | Product$sizesArgs<ExtArgs>
@@ -6100,6 +6126,8 @@ export namespace Prisma {
       categoryId: number
       foodType: $Enums.FoodType
       createdAt: Date
+      ratingAverage: number
+      ratingCount: number
     }, ExtArgs["result"]["product"]>
     composites: {}
   }
@@ -6485,6 +6513,8 @@ export namespace Prisma {
     readonly categoryId: FieldRef<"Product", 'Int'>
     readonly foodType: FieldRef<"Product", 'FoodType'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
+    readonly ratingAverage: FieldRef<"Product", 'Float'>
+    readonly ratingCount: FieldRef<"Product", 'Int'>
   }
     
 
@@ -15112,6 +15142,7 @@ export namespace Prisma {
     rating: number | null
     comment: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type ReviewMaxAggregateOutputType = {
@@ -15121,6 +15152,7 @@ export namespace Prisma {
     rating: number | null
     comment: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type ReviewCountAggregateOutputType = {
@@ -15130,6 +15162,7 @@ export namespace Prisma {
     rating: number
     comment: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -15155,6 +15188,7 @@ export namespace Prisma {
     rating?: true
     comment?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type ReviewMaxAggregateInputType = {
@@ -15164,6 +15198,7 @@ export namespace Prisma {
     rating?: true
     comment?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type ReviewCountAggregateInputType = {
@@ -15173,6 +15208,7 @@ export namespace Prisma {
     rating?: true
     comment?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -15269,6 +15305,7 @@ export namespace Prisma {
     rating: number
     comment: string | null
     createdAt: Date
+    updatedAt: Date
     _count: ReviewCountAggregateOutputType | null
     _avg: ReviewAvgAggregateOutputType | null
     _sum: ReviewSumAggregateOutputType | null
@@ -15297,6 +15334,7 @@ export namespace Prisma {
     rating?: boolean
     comment?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["review"]>
@@ -15310,9 +15348,10 @@ export namespace Prisma {
     rating?: boolean
     comment?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "productId" | "rating" | "comment" | "createdAt", ExtArgs["result"]["review"]>
+  export type ReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "productId" | "rating" | "comment" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
   export type ReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
@@ -15331,6 +15370,7 @@ export namespace Prisma {
       rating: number
       comment: string | null
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["review"]>
     composites: {}
   }
@@ -15708,6 +15748,7 @@ export namespace Prisma {
     readonly rating: FieldRef<"Review", 'Int'>
     readonly comment: FieldRef<"Review", 'String'>
     readonly createdAt: FieldRef<"Review", 'DateTime'>
+    readonly updatedAt: FieldRef<"Review", 'DateTime'>
   }
     
 
@@ -19070,7 +19111,9 @@ export namespace Prisma {
     isAvailable: 'isAvailable',
     categoryId: 'categoryId',
     foodType: 'foodType',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    ratingAverage: 'ratingAverage',
+    ratingCount: 'ratingCount'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -19169,7 +19212,8 @@ export namespace Prisma {
     productId: 'productId',
     rating: 'rating',
     comment: 'comment',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
@@ -19638,6 +19682,8 @@ export namespace Prisma {
     categoryId?: IntFilter<"Product"> | number
     foodType?: EnumFoodTypeFilter<"Product"> | $Enums.FoodType
     createdAt?: DateTimeFilter<"Product"> | Date | string
+    ratingAverage?: FloatFilter<"Product"> | number
+    ratingCount?: IntFilter<"Product"> | number
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
     sizes?: ProductSizeListRelationFilter
     addons?: ProductAddonListRelationFilter
@@ -19657,6 +19703,8 @@ export namespace Prisma {
     categoryId?: SortOrder
     foodType?: SortOrder
     createdAt?: SortOrder
+    ratingAverage?: SortOrder
+    ratingCount?: SortOrder
     category?: CategoryOrderByWithRelationInput
     sizes?: ProductSizeOrderByRelationAggregateInput
     addons?: ProductAddonOrderByRelationAggregateInput
@@ -19680,6 +19728,8 @@ export namespace Prisma {
     categoryId?: IntFilter<"Product"> | number
     foodType?: EnumFoodTypeFilter<"Product"> | $Enums.FoodType
     createdAt?: DateTimeFilter<"Product"> | Date | string
+    ratingAverage?: FloatFilter<"Product"> | number
+    ratingCount?: IntFilter<"Product"> | number
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
     sizes?: ProductSizeListRelationFilter
     addons?: ProductAddonListRelationFilter
@@ -19699,6 +19749,8 @@ export namespace Prisma {
     categoryId?: SortOrder
     foodType?: SortOrder
     createdAt?: SortOrder
+    ratingAverage?: SortOrder
+    ratingCount?: SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
     _max?: ProductMaxOrderByAggregateInput
@@ -19719,6 +19771,8 @@ export namespace Prisma {
     categoryId?: IntWithAggregatesFilter<"Product"> | number
     foodType?: EnumFoodTypeWithAggregatesFilter<"Product"> | $Enums.FoodType
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
+    ratingAverage?: FloatWithAggregatesFilter<"Product"> | number
+    ratingCount?: IntWithAggregatesFilter<"Product"> | number
   }
 
   export type FavoriteWhereInput = {
@@ -20234,6 +20288,7 @@ export namespace Prisma {
     rating?: IntFilter<"Review"> | number
     comment?: StringNullableFilter<"Review"> | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
+    updatedAt?: DateTimeFilter<"Review"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
   }
@@ -20245,6 +20300,7 @@ export namespace Prisma {
     rating?: SortOrder
     comment?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
     product?: ProductOrderByWithRelationInput
     _relevance?: ReviewOrderByRelevanceInput
@@ -20252,6 +20308,7 @@ export namespace Prisma {
 
   export type ReviewWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    userId_productId?: ReviewUserIdProductIdCompoundUniqueInput
     AND?: ReviewWhereInput | ReviewWhereInput[]
     OR?: ReviewWhereInput[]
     NOT?: ReviewWhereInput | ReviewWhereInput[]
@@ -20260,9 +20317,10 @@ export namespace Prisma {
     rating?: IntFilter<"Review"> | number
     comment?: StringNullableFilter<"Review"> | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
+    updatedAt?: DateTimeFilter<"Review"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
-  }, "id">
+  }, "id" | "userId_productId">
 
   export type ReviewOrderByWithAggregationInput = {
     id?: SortOrder
@@ -20271,6 +20329,7 @@ export namespace Prisma {
     rating?: SortOrder
     comment?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: ReviewCountOrderByAggregateInput
     _avg?: ReviewAvgOrderByAggregateInput
     _max?: ReviewMaxOrderByAggregateInput
@@ -20288,6 +20347,7 @@ export namespace Prisma {
     rating?: IntWithAggregatesFilter<"Review"> | number
     comment?: StringNullableWithAggregatesFilter<"Review"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Review"> | Date | string
   }
 
   export type OrderStatusLogWhereInput = {
@@ -20730,6 +20790,8 @@ export namespace Prisma {
     isAvailable?: boolean
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     category: CategoryCreateNestedOneWithoutProductsInput
     sizes?: ProductSizeCreateNestedManyWithoutProductInput
     addons?: ProductAddonCreateNestedManyWithoutProductInput
@@ -20749,6 +20811,8 @@ export namespace Prisma {
     categoryId: number
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     sizes?: ProductSizeUncheckedCreateNestedManyWithoutProductInput
     addons?: ProductAddonUncheckedCreateNestedManyWithoutProductInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
@@ -20765,6 +20829,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     sizes?: ProductSizeUpdateManyWithoutProductNestedInput
     addons?: ProductAddonUpdateManyWithoutProductNestedInput
@@ -20784,6 +20850,8 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     sizes?: ProductSizeUncheckedUpdateManyWithoutProductNestedInput
     addons?: ProductAddonUncheckedUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
@@ -20802,6 +20870,8 @@ export namespace Prisma {
     categoryId: number
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
   }
 
   export type ProductUpdateManyMutationInput = {
@@ -20812,6 +20882,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type ProductUncheckedUpdateManyInput = {
@@ -20824,6 +20896,8 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type FavoriteCreateInput = {
@@ -21265,6 +21339,7 @@ export namespace Prisma {
     rating: number
     comment?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     user: UserCreateNestedOneWithoutReviewsInput
     product: ProductCreateNestedOneWithoutReviewsInput
   }
@@ -21276,12 +21351,14 @@ export namespace Prisma {
     rating: number
     comment?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ReviewUpdateInput = {
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
     product?: ProductUpdateOneRequiredWithoutReviewsNestedInput
   }
@@ -21293,6 +21370,7 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewCreateManyInput = {
@@ -21302,12 +21380,14 @@ export namespace Prisma {
     rating: number
     comment?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ReviewUpdateManyMutationInput = {
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewUncheckedUpdateManyInput = {
@@ -21317,6 +21397,7 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderStatusLogCreateInput = {
@@ -21940,12 +22021,16 @@ export namespace Prisma {
     categoryId?: SortOrder
     foodType?: SortOrder
     createdAt?: SortOrder
+    ratingAverage?: SortOrder
+    ratingCount?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
     id?: SortOrder
     price?: SortOrder
     categoryId?: SortOrder
+    ratingAverage?: SortOrder
+    ratingCount?: SortOrder
   }
 
   export type ProductMaxOrderByAggregateInput = {
@@ -21958,6 +22043,8 @@ export namespace Prisma {
     categoryId?: SortOrder
     foodType?: SortOrder
     createdAt?: SortOrder
+    ratingAverage?: SortOrder
+    ratingCount?: SortOrder
   }
 
   export type ProductMinOrderByAggregateInput = {
@@ -21970,12 +22057,16 @@ export namespace Prisma {
     categoryId?: SortOrder
     foodType?: SortOrder
     createdAt?: SortOrder
+    ratingAverage?: SortOrder
+    ratingCount?: SortOrder
   }
 
   export type ProductSumOrderByAggregateInput = {
     id?: SortOrder
     price?: SortOrder
     categoryId?: SortOrder
+    ratingAverage?: SortOrder
+    ratingCount?: SortOrder
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -22475,6 +22566,11 @@ export namespace Prisma {
     search: string
   }
 
+  export type ReviewUserIdProductIdCompoundUniqueInput = {
+    userId: number
+    productId: number
+  }
+
   export type ReviewCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -22482,6 +22578,7 @@ export namespace Prisma {
     rating?: SortOrder
     comment?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ReviewAvgOrderByAggregateInput = {
@@ -22498,6 +22595,7 @@ export namespace Prisma {
     rating?: SortOrder
     comment?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ReviewMinOrderByAggregateInput = {
@@ -22507,6 +22605,7 @@ export namespace Prisma {
     rating?: SortOrder
     comment?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ReviewSumOrderByAggregateInput = {
@@ -24435,6 +24534,7 @@ export namespace Prisma {
     rating: number
     comment?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     product: ProductCreateNestedOneWithoutReviewsInput
   }
 
@@ -24444,6 +24544,7 @@ export namespace Prisma {
     rating: number
     comment?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ReviewCreateOrConnectWithoutUserInput = {
@@ -24646,6 +24747,7 @@ export namespace Prisma {
     rating?: IntFilter<"Review"> | number
     comment?: StringNullableFilter<"Review"> | string | null
     createdAt?: DateTimeFilter<"Review"> | Date | string
+    updatedAt?: DateTimeFilter<"Review"> | Date | string
   }
 
   export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
@@ -24874,6 +24976,8 @@ export namespace Prisma {
     isAvailable?: boolean
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     sizes?: ProductSizeCreateNestedManyWithoutProductInput
     addons?: ProductAddonCreateNestedManyWithoutProductInput
     cartItems?: CartItemCreateNestedManyWithoutProductInput
@@ -24891,6 +24995,8 @@ export namespace Prisma {
     isAvailable?: boolean
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     sizes?: ProductSizeUncheckedCreateNestedManyWithoutProductInput
     addons?: ProductAddonUncheckedCreateNestedManyWithoutProductInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
@@ -24938,6 +25044,8 @@ export namespace Prisma {
     categoryId?: IntFilter<"Product"> | number
     foodType?: EnumFoodTypeFilter<"Product"> | $Enums.FoodType
     createdAt?: DateTimeFilter<"Product"> | Date | string
+    ratingAverage?: FloatFilter<"Product"> | number
+    ratingCount?: IntFilter<"Product"> | number
   }
 
   export type CategoryCreateWithoutProductsInput = {
@@ -25064,6 +25172,7 @@ export namespace Prisma {
     rating: number
     comment?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     user: UserCreateNestedOneWithoutReviewsInput
   }
 
@@ -25073,6 +25182,7 @@ export namespace Prisma {
     rating: number
     comment?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ReviewCreateOrConnectWithoutProductInput = {
@@ -25304,6 +25414,8 @@ export namespace Prisma {
     isAvailable?: boolean
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     category: CategoryCreateNestedOneWithoutProductsInput
     sizes?: ProductSizeCreateNestedManyWithoutProductInput
     addons?: ProductAddonCreateNestedManyWithoutProductInput
@@ -25322,6 +25434,8 @@ export namespace Prisma {
     categoryId: number
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     sizes?: ProductSizeUncheckedCreateNestedManyWithoutProductInput
     addons?: ProductAddonUncheckedCreateNestedManyWithoutProductInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
@@ -25397,6 +25511,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     sizes?: ProductSizeUpdateManyWithoutProductNestedInput
     addons?: ProductAddonUpdateManyWithoutProductNestedInput
@@ -25415,6 +25531,8 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     sizes?: ProductSizeUncheckedUpdateManyWithoutProductNestedInput
     addons?: ProductAddonUncheckedUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
@@ -25430,6 +25548,8 @@ export namespace Prisma {
     isAvailable?: boolean
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     category: CategoryCreateNestedOneWithoutProductsInput
     addons?: ProductAddonCreateNestedManyWithoutProductInput
     cartItems?: CartItemCreateNestedManyWithoutProductInput
@@ -25448,6 +25568,8 @@ export namespace Prisma {
     categoryId: number
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     addons?: ProductAddonUncheckedCreateNestedManyWithoutProductInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -25531,6 +25653,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     addons?: ProductAddonUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
@@ -25549,6 +25673,8 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     addons?: ProductAddonUncheckedUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -25596,6 +25722,8 @@ export namespace Prisma {
     isAvailable?: boolean
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     category: CategoryCreateNestedOneWithoutProductsInput
     sizes?: ProductSizeCreateNestedManyWithoutProductInput
     cartItems?: CartItemCreateNestedManyWithoutProductInput
@@ -25614,6 +25742,8 @@ export namespace Prisma {
     categoryId: number
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     sizes?: ProductSizeUncheckedCreateNestedManyWithoutProductInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -25683,6 +25813,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     sizes?: ProductSizeUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
@@ -25701,6 +25833,8 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     sizes?: ProductSizeUncheckedUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -25804,6 +25938,8 @@ export namespace Prisma {
     isAvailable?: boolean
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     category: CategoryCreateNestedOneWithoutProductsInput
     sizes?: ProductSizeCreateNestedManyWithoutProductInput
     addons?: ProductAddonCreateNestedManyWithoutProductInput
@@ -25822,6 +25958,8 @@ export namespace Prisma {
     categoryId: number
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     sizes?: ProductSizeUncheckedCreateNestedManyWithoutProductInput
     addons?: ProductAddonUncheckedCreateNestedManyWithoutProductInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
@@ -25936,6 +26074,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     sizes?: ProductSizeUpdateManyWithoutProductNestedInput
     addons?: ProductAddonUpdateManyWithoutProductNestedInput
@@ -25954,6 +26094,8 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     sizes?: ProductSizeUncheckedUpdateManyWithoutProductNestedInput
     addons?: ProductAddonUncheckedUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
@@ -26135,6 +26277,8 @@ export namespace Prisma {
     isAvailable?: boolean
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     category: CategoryCreateNestedOneWithoutProductsInput
     sizes?: ProductSizeCreateNestedManyWithoutProductInput
     addons?: ProductAddonCreateNestedManyWithoutProductInput
@@ -26153,6 +26297,8 @@ export namespace Prisma {
     categoryId: number
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     sizes?: ProductSizeUncheckedCreateNestedManyWithoutProductInput
     addons?: ProductAddonUncheckedCreateNestedManyWithoutProductInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
@@ -26261,6 +26407,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     sizes?: ProductSizeUpdateManyWithoutProductNestedInput
     addons?: ProductAddonUpdateManyWithoutProductNestedInput
@@ -26279,6 +26427,8 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     sizes?: ProductSizeUncheckedUpdateManyWithoutProductNestedInput
     addons?: ProductAddonUncheckedUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
@@ -26711,6 +26861,8 @@ export namespace Prisma {
     isAvailable?: boolean
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     category: CategoryCreateNestedOneWithoutProductsInput
     sizes?: ProductSizeCreateNestedManyWithoutProductInput
     addons?: ProductAddonCreateNestedManyWithoutProductInput
@@ -26729,6 +26881,8 @@ export namespace Prisma {
     categoryId: number
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
     sizes?: ProductSizeUncheckedCreateNestedManyWithoutProductInput
     addons?: ProductAddonUncheckedCreateNestedManyWithoutProductInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
@@ -26804,6 +26958,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     sizes?: ProductSizeUpdateManyWithoutProductNestedInput
     addons?: ProductAddonUpdateManyWithoutProductNestedInput
@@ -26822,6 +26978,8 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     sizes?: ProductSizeUncheckedUpdateManyWithoutProductNestedInput
     addons?: ProductAddonUncheckedUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
@@ -27100,6 +27258,7 @@ export namespace Prisma {
     rating: number
     comment?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type NotificationCreateManyUserInput = {
@@ -27227,6 +27386,7 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     product?: ProductUpdateOneRequiredWithoutReviewsNestedInput
   }
 
@@ -27236,6 +27396,7 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewUncheckedUpdateManyWithoutUserInput = {
@@ -27244,6 +27405,7 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NotificationUpdateWithoutUserInput = {
@@ -27372,6 +27534,8 @@ export namespace Prisma {
     isAvailable?: boolean
     foodType: $Enums.FoodType
     createdAt?: Date | string
+    ratingAverage?: number
+    ratingCount?: number
   }
 
   export type ProductUpdateWithoutCategoryInput = {
@@ -27382,6 +27546,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     sizes?: ProductSizeUpdateManyWithoutProductNestedInput
     addons?: ProductAddonUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
@@ -27399,6 +27565,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
     sizes?: ProductSizeUncheckedUpdateManyWithoutProductNestedInput
     addons?: ProductAddonUncheckedUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
@@ -27416,6 +27584,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     foodType?: EnumFoodTypeFieldUpdateOperationsInput | $Enums.FoodType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ratingAverage?: FloatFieldUpdateOperationsInput | number
+    ratingCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type ProductSizeCreateManyProductInput = {
@@ -27451,6 +27621,7 @@ export namespace Prisma {
     rating: number
     comment?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type FavoriteCreateManyProductInput = {
@@ -27552,6 +27723,7 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutReviewsNestedInput
   }
 
@@ -27561,6 +27733,7 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewUncheckedUpdateManyWithoutProductInput = {
@@ -27569,6 +27742,7 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FavoriteUpdateWithoutProductInput = {
