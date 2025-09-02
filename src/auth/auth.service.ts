@@ -117,8 +117,17 @@ export class AuthService {
       });
 
       return { accessToken: newAccess, refreshToken: newRefresh };
-    } catch {
-      throw new UnauthorizedException('Invalid refresh token');
+    } catch (error) {
+      if (
+        error.name === 'JsonWebTokenError' ||
+        error.name === 'TokenExpiredError' ||
+        error.name === 'NotBeforeError'
+      ) {
+        throw new UnauthorizedException('Invalid refresh token');
+      }
+      // Log unexpected errors for debugging
+      console.error('Unexpected error in rotateRefreshToken:', error);
+      throw error;
     }
   }
 

@@ -1,3 +1,4 @@
+// src/favorites/favorites.controller.ts
 import {
   Body,
   Controller,
@@ -13,15 +14,29 @@ import {
 import { FavoritesService } from './favorites.service';
 import { ProductIdDto } from './dto/product-id.dto';
 import { JwtAuthGuard } from '../auth/jwt.guard';
+import { NotificationsService } from 'src/notification/notifications.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('favorites')
 export class FavoritesController {
-  constructor(private readonly service: FavoritesService) {}
+  constructor(
+    private readonly service: FavoritesService,
+    private readonly notifications: NotificationsService,
+  ) {}
 
   @Post()
-  add(@Req() req: any, @Body() dto: ProductIdDto) {
-    return this.service.add(req.user.userId, dto.productId);
+  async add(@Req() req: any, @Body() dto: ProductIdDto) {
+    const res = await this.service.add(req.user.userId, dto.productId);
+
+    // إشعار (زي فيسبوك)
+    this.notifications
+      .push(
+        req.user.userId,
+        'Added to favorites',
+        `Product #${dto.productId} added to your favorites.`,
+      )
+      .catch(() => {});
+    return res;
   }
 
   @Delete(':productId')

@@ -10,20 +10,21 @@ import { CommonModule } from './common/common.module';
 import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
-import { NotificationService } from './notification/notification.service';
-import { NotificationController } from './notification/notification.controller';
 import { AddressModule } from './address/address.module';
 import { PaymobController } from './paymob/paymob.controller';
 import { PaymobModule } from './paymob/paymob.module';
-import { NotificationModule } from './notification/notification.module';
 import { ConfigModule } from '@nestjs/config';
 import { FavoritesModule } from './favorites/favorites.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { NotificationsModule } from './notification/notification.module';
+import { NotificationsController } from './notification/notifications.controller';
+import { NotificationsService } from './notification/notifications.service';
 
 @Module({
   imports: [
     CommonModule,
     PrismaModule,
+    NotificationsModule,
     AuthModule,
     UserModule,
     CategoryModule,
@@ -32,14 +33,13 @@ import { ReviewsModule } from './reviews/reviews.module';
     OrderModule,
     AddressModule,
     PaymobModule,
-    NotificationModule,
     FavoritesModule,
     ReviewsModule,
     ConfigModule.forRoot({
       isGlobal: true, // 👈 يخليها متاحة في كل المشروع
     }),
   ],
-  controllers: [AppController, NotificationController, PaymobController],
-  providers: [AppService, ImageService, NotificationService],
+  controllers: [AppController, NotificationsController, PaymobController],
+  providers: [AppService, ImageService],
 })
 export class AppModule {}

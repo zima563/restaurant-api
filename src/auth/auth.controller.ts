@@ -15,13 +15,27 @@ import { Request, Response } from 'express';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  private setRefreshCookie(res: Response, token: string) {
-    res.cookie('rt', token, {
+  private setAuthCookies(
+    res: Response,
+    accessToken: string,
+    refreshToken: string,
+  ) {
+    const isProd = process.env.NODE_ENV === 'production';
+
+    res.cookie('access_token', accessToken, {
       httpOnly: true,
-      secure: true, // خليها true في HTTPS
-      sameSite: 'strict',
+      secure: isProd ? true : false,
+      sameSite: isProd ? 'none' : 'lax',
+      path: '/', // مهم عشان يتبعت مع /notifications
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie('rt', refreshToken, {
+      httpOnly: true,
+      secure: isProd ? true : false,
+      sameSite: isProd ? 'none' : 'lax',
+      path: '/',
       maxAge: Number(process.env.JWT_REFRESH_TTL || 60 * 60 * 24 * 7) * 1000,
-      path: '/', // غيّرها لو عايز تقيد المسار
     });
   }
 
@@ -32,7 +46,7 @@ export class AuthController {
   ) {
     const { accessToken, refreshToken, user } =
       await this.authService.register(dto);
-    this.setRefreshCookie(res, refreshToken);
+    this.setAuthCookies(res, accessToken, refreshToken);
     return { accessToken, user };
   }
 
@@ -43,7 +57,7 @@ export class AuthController {
   ) {
     const { accessToken, refreshToken, user } =
       await this.authService.login(dto);
-    this.setRefreshCookie(res, refreshToken);
+    this.setAuthCookies(res, accessToken, refreshToken);
     return { accessToken, user };
   }
 
@@ -57,7 +71,7 @@ export class AuthController {
 
     const { accessToken, refreshToken } =
       await this.authService.rotateRefreshToken(rt);
-    this.setRefreshCookie(res, refreshToken);
+    this.setAuthCookies(res, accessToken, refreshToken);
     return { accessToken };
   }
 

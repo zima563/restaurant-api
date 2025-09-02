@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Notifications Queue Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: system-ui, Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .btn {
+            padding: 6px 10px;
+            border: 1px solid #999;
+            background: #f7f7f7;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        #badge {
+            display: none;
+            background: #e33;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 6px;
+        }
+
+        #list .item {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            border-bottom: 1px solid #eee;
+            padding: 10px 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-top: 8px;
+        }
+
+        .dot.unread {
+            background: #0a7;
+        }
+
+        .dot.read {
+            background: #ccc;
+        }
+
+        .title {
+            font-weight: 700;
+        }
+
+        .time {
+            color: #888;
+            font-size: 12px;
+        }
+
+        #log {
+            font-family: ui-monospace, monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Notifications Queue (Socket.IO)</h2>
+
+    <!-- Auth -->
+    <div class="card" style="margin-bottom:12px;">
+        <form id="loginForm" class="row" onsubmit="return false;">
+            <input id="email" placeholder="email" value="user@email.com" />
+            <input id="password" placeholder="password" value="pass123" type="password" />
+            <button class="btn" id="btnLogin">Login</button>
+            <button class="btn" id="btnLogout" type="button">Logout</button>
+            <span id="loginStatus"></span>
+        </form>
+        <div style="margin-top:8px;" class="row">
+            <button class="btn" id="btnSetCookieFromLastAccess" type="button">Set access_token cookie from last
+                accessToken</button>
+            <small>Useful if your /auth/login doesn’t set access_token cookie itself.</small>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="row" style="justify-content: space-between; margin-bottom:10px;">
+        <div>
+            <span style="font-weight:700;">Notifications</span>
+            <span id="badge">0</span>
+        </div>
+        <div class="row">
+            <button class="btn" id="btnConnect">Connect Socket</button>
+            <button class="btn" id="btnLoadMore" disabled>Load more</button>
+            <button class="btn" id="btnMarkAll" disabled>Mark all as read</button>
+        </div>
+    </div>
+
+    <!-- List -->
+    <div id="list" class="card"></div>
+
+    <h3 style="margin-top:18px;">Log</h3>
+    <div id="log" class="card" style="max-height:240px; overflow:auto;"></div>
+
+    <script>
+        // ---- helpers
+        const log = (msg) => {
+            console.log(msg);
+            const el = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            el.textContent += `[${time}] ${typeof msg === 'string' ? msg : JSON.stringify(msg)}\n`;
+            el.scrollTop = el.scrollHeight;
+        };
+
+        const setCookie = (name, value, { maxAgeSec = 60 * 10, path = '/', sameSite = 'Lax', secure = false } = {}) => {
+            let c = `${name}=${encodeURIComponent(value)}; Max-Age=${maxAgeSec}; Path=${path}; SameSite=${sameSite}`;
+            if (secure) c += '; Secure';
+            document.cookie = c;
+        };
+        const deleteCookie = (name) => setCookie(name, '', { maxAgeSec: 0 });
+
+        // ---- state
+        let socket = null;
+        let lastAccessToken = null; // from /auth/login response
+        const state = {
+            items: [],
+            meta: { page: 1, limit: 10, total: 0, totalPages: 1 },
+            unreadCount: 0,
+        };
+
+        // ---- UI render
+        function renderBadge() {
+            const b = document.getElementById('badge');
+            b.textContent = state.unreadCount;
+            b.style.display = state.unreadCount > 0 ? 'inline-block' : 'none';
+        }
+
+        function renderList() {
+            const wrap = document.getElementById('list');
+            wrap.innerHTML = '';
+            if (!state.items.length) {
+                wrap.innerHTML = '<div style="color:#777">No notifications</div>';
+                return;
+            }
+            for (const n of state.items) {
+                const row = document.createElement('div');
+                row.className = 'item';
+                row.innerHTML = `
+        <div class="dot ${n.isRead ? 'read' : 'unread'}"></div>
+        <div style="flex:1">
+          <div class="title">${escapeHtml(n.title || '')}</div>
+          <div>${escapeHtml(n.body || '')}</div>
+          <div class="time">${new Date(n.createdAt).toLocaleString()}</div>
+        </div>
+        <div>
+          ${n.isRead ? '' : `<button class="btn btnMark" data-id="${n.id}">Mark</button>`}
+        </div>
+      `;
+                wrap.appendChild(row);
+            }
+            // bind mark buttons
+            wrap.querySelectorAll('.btnMark').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = Number(btn.dataset.id);
+                    if (socket) socket.emit('notifications:mark_read', { id });
+                });
+            });
+            // controls enabling
+            document.getElementById('btnLoadMore').disabled = !(state.meta.page < state.meta.totalPages);
+            document.getElementById('btnMarkAll').disabled = state.unreadCount === 0;
+        }
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, m => (
+                { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]
+            ));
+        }
+
+        // ---- socket connect
+        function connectSocket() {
+            if (socket && socket.connected) {
+                log('Socket already connected');
+                return;
+            }
+            socket = io('/notifications', {
+                transports: ['websocket'],
+                withCredentials: true,
+            });
+
+            socket.on('connect', () => {
+                log('WS connected: ' + socket.id);
+                // اطلب أول صفحة كـ fallback لو السيرفر ما بعتش أوتوماتيك
+                socket.emit('notifications:list', { page: 1, limit: state.meta.limit });
+            });
+
+            socket.on('connect_error', (e) => log('WS error: ' + e.message));
+            socket.on('disconnect', (r) => log('WS disconnected: ' + r));
+
+            socket.on('notifications:queue', ({ items, meta }) => {
+                log({ event: 'notifications:queue', meta });
+                if (meta.page === 1) {
+                    state.items = items;
+                } else {
+                    const existing = new Set(state.items.map(x => x.id));
+                    for (const it of items) if (!existing.has(it.id)) state.items.push(it);
+                }
+                state.meta = meta;
+                renderList();
+            });
+
+            socket.on('notifications:new', (n) => {
+                log({ event: 'notifications:new', id: n.id });
+                state.items = [n, ...state.items];
+                renderList();
+            });
+
+            socket.on('notifications:unread_count', ({ count }) => {
+                state.unreadCount = count;
+                renderBadge();
+                renderList();
+            });
+
+            socket.on('notifications:marked', ({ ids }) => {
+                log({ event: 'notifications:marked', ids });
+                state.items = state.items.map(it => ids.includes(it.id) ? { ...it, isRead: true } : it);
+                renderList();
+            });
+
+            socket.on('notifications:marked_all', ({ ok }) => {
+                log({ event: 'notifications:marked_all', ok });
+                state.items = state.items.map(it => ({ ...it, isRead: true }));
+                renderList();
+            });
+        }
+
+        // ---- events: auth
+        document.getElementById('btnLogin').addEventListener('click', async () => {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            try {
+                const res = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ email, password }),
+                });
+                const data = await res.json();
+                document.getElementById('loginStatus').textContent = `status: ${res.status}`;
+                if (!res.ok) {
+                    log({ loginError: data });
+                    return;
+                }
+                lastAccessToken = data.accessToken;
+                log('Login OK: ' + res.status);
+                log({ response: data });
+
+                // لو الـ API مش بيحط access_token في كوكي، هنحطّه يدويًا من الـ accessToken
+                setCookie('access_token', lastAccessToken, { maxAgeSec: 60 * 15, path: '/', sameSite: 'Lax' });
+                log('Set cookie access_token from accessToken');
+            } catch (e) {
+                log('Login exception: ' + e.message);
+            }
+        });
+
+        document.getElementById('btnSetCookieFromLastAccess').addEventListener('click', () => {
+            if (!lastAccessToken) return log('No last accessToken yet.');
+            setCookie('access_token', lastAccessToken, { maxAgeSec: 60 * 15, path: '/', sameSite: 'Lax' });
+            log('Cookie access_token set manually.');
+        });
+
+        document.getElementById('btnLogout').addEventListener('click', async () => {
+            try {
+                await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+                deleteCookie('access_token');
+                log('Logged out and access_token cookie cleared.');
+            } catch (e) {
+                log('Logout exception: ' + e.message);
+            }
+        });
+
+        // ---- events: controls
+        document.getElementById('btnConnect').addEventListener('click', () => connectSocket());
+
+        document.getElementById('btnLoadMore').addEventListener('click', () => {
+            const next = state.meta.page + 1;
+            if (socket && next <= state.meta.totalPages) {
+                socket.emit('notifications:list', { page: next, limit: state.meta.limit });
+            }
+        });
+
+        document.getElementById('btnMarkAll').addEventListener('click', () => {
+            if (socket) socket.emit('notifications:mark_all');
+        });
+    </script>
+</body>
+
+</html>

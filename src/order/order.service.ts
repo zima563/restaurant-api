@@ -9,9 +9,9 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { CartService } from 'src/cart/cart.service';
 import { UpdateOrderStatusDto } from './dto/update-status.dto';
-import { NotificationService } from 'src/notification/notification.service';
 import { PaymentStatus } from 'generated/prisma';
 import { PaymobService } from 'src/paymob/paymob.service';
+import { NotificationsService } from 'src/notification/notifications.service';
 
 @Injectable()
 export class OrderService {
@@ -20,7 +20,7 @@ export class OrderService {
   constructor(
     private prisma: PrismaService,
     private cartService: CartService,
-    private notificationService: NotificationService,
+    private notificationService: NotificationsService,
     private paymobService: PaymobService,
   ) {}
 
@@ -148,7 +148,7 @@ export class OrderService {
         status: dto.status,
       },
     });
-    await this.notificationService.create(
+    await this.notificationService.push(
       order.userId,
       'Order Update',
       `Your order #${order.id} status changed to ${dto.status}`,

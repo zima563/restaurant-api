@@ -14,13 +14,7 @@ async function bootstrap() {
 
   // ✅ CORS settings
   app.enableCors({
-    origin: [
-      'http://localhost:5173',
-      'http://127.0.0.1:5173',
-      'http://localhost:3000',
-      'http://127.0.0.1:3000',
-      'https://your-frontend-domain.com', // ضيف هنا الدومين الفعلي لو عندك
-    ],
+    origin: ['https://127.0.0.1:5500', 'https://localhost:5173'],
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: [
@@ -31,6 +25,8 @@ async function bootstrap() {
       'Authorization',
     ],
   });
+
+  app.use('/_test', express.static(join(process.cwd(), 'test-static')));
 
   // ✅ حل نهائي للـ preflight CORS/OPTIONS requests (أي طلب OPTIONS هيرجع الهيدرز المطلوبة)
   app.use((req, res, next) => {
