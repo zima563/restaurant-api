@@ -101,8 +101,9 @@
             <span id="loginStatus"></span>
         </form>
         <div style="margin-top:8px;" class="row">
-            <button class="btn" id="btnSetCookieFromLastAccess" type="button">Set access_token cookie from last
-                accessToken</button>
+            <button class="btn" id="btnSetCookieFromLastAccess" type="button">
+                Set access_token cookie from last accessToken
+            </button>
             <small>Useful if your /auth/login doesn’t set access_token cookie itself.</small>
         </div>
     </div>
@@ -127,7 +128,12 @@
     <div id="log" class="card" style="max-height:240px; overflow:auto;"></div>
 
     <script>
-        // ---- helpers
+        // ====== ENV / URL ======
+        const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+        const isHttps = location.protocol === 'https:';
+        const API_URL = isLocal ? 'http://localhost:3000' : 'https://api.example.com'; // عدّل الدومين في الإنتاج
+
+        // ====== helpers ======
         const log = (msg) => {
             console.log(msg);
             const el = document.getElementById('log');
@@ -136,14 +142,19 @@
             el.scrollTop = el.scrollHeight;
         };
 
-        const setCookie = (name, value, { maxAgeSec = 60 * 10, path = '/', sameSite = 'Lax', secure = false } = {}) => {
+        const setCookie = (name, value, {
+            maxAgeSec = 60 * 10,
+            path = '/',
+            sameSite = (isHttps && !isLocal) ? 'None' : 'Lax',
+            secure = (isHttps && !isLocal)
+        } = {}) => {
             let c = `${name}=${encodeURIComponent(value)}; Max-Age=${maxAgeSec}; Path=${path}; SameSite=${sameSite}`;
             if (secure) c += '; Secure';
             document.cookie = c;
         };
         const deleteCookie = (name) => setCookie(name, '', { maxAgeSec: 0 });
 
-        // ---- state
+        // ====== state ======
         let socket = null;
         let lastAccessToken = null; // from /auth/login response
         const state = {
@@ -152,7 +163,7 @@
             unreadCount: 0,
         };
 
-        // ---- UI render
+        // ====== UI render ======
         function renderBadge() {
             const b = document.getElementById('badge');
             b.textContent = state.unreadCount;
@@ -170,26 +181,24 @@
                 const row = document.createElement('div');
                 row.className = 'item';
                 row.innerHTML = `
-        <div class="dot ${n.isRead ? 'read' : 'unread'}"></div>
-        <div style="flex:1">
-          <div class="title">${escapeHtml(n.title || '')}</div>
-          <div>${escapeHtml(n.body || '')}</div>
-          <div class="time">${new Date(n.createdAt).toLocaleString()}</div>
-        </div>
-        <div>
-          ${n.isRead ? '' : `<button class="btn btnMark" data-id="${n.id}">Mark</button>`}
-        </div>
-      `;
+          <div class="dot ${n.isRead ? 'read' : 'unread'}"></div>
+          <div style="flex:1">
+            <div class="title">${escapeHtml(n.title || '')}</div>
+            <div>${escapeHtml(n.body || '')}</div>
+            <div class="time">${new Date(n.createdAt).toLocaleString()}</div>
+          </div>
+          <div>
+            ${n.isRead ? '' : `<button class="btn btnMark" data-id="${n.id}">Mark</button>`}
+          </div>
+        `;
                 wrap.appendChild(row);
             }
-            // bind mark buttons
             wrap.querySelectorAll('.btnMark').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = Number(btn.dataset.id);
                     if (socket) socket.emit('notifications:mark_read', { id });
                 });
             });
-            // controls enabling
             document.getElementById('btnLoadMore').disabled = !(state.meta.page < state.meta.totalPages);
             document.getElementById('btnMarkAll').disabled = state.unreadCount === 0;
         }
@@ -200,14 +209,14 @@
             ));
         }
 
-        // ---- socket connect
+        // ====== socket connect ======
         function connectSocket() {
             if (socket && socket.connected) {
                 log('Socket already connected');
                 return;
             }
-            socket = io('/notifications', {
-                transports: ['websocket'],
+            socket = io(`${API_URL}/notifications`, {
+                transports: ['websocket', 'polling'], // polling fallback مفيد ورا بروكسي
                 withCredentials: true,
             });
 
@@ -257,12 +266,12 @@
             });
         }
 
-        // ---- events: auth
+        // ====== events: auth ======
         document.getElementById('btnLogin').addEventListener('click', async () => {
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             try {
-                const res = await fetch('/auth/login', {
+                const res = await fetch(`${API_URL}/auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
@@ -279,7 +288,12 @@
                 log({ response: data });
 
                 // لو الـ API مش بيحط access_token في كوكي، هنحطّه يدويًا من الـ accessToken
-                setCookie('access_token', lastAccessToken, { maxAgeSec: 60 * 15, path: '/', sameSite: 'Lax' });
+                setCookie('access_token', lastAccessToken, {
+                    maxAgeSec: 60 * 15,
+                    path: '/',
+                    sameSite: (isHttps && !isLocal) ? 'None' : 'Lax',
+                    secure: (isHttps && !isLocal),
+                });
                 log('Set cookie access_token from accessToken');
             } catch (e) {
                 log('Login exception: ' + e.message);
@@ -288,13 +302,18 @@
 
         document.getElementById('btnSetCookieFromLastAccess').addEventListener('click', () => {
             if (!lastAccessToken) return log('No last accessToken yet.');
-            setCookie('access_token', lastAccessToken, { maxAgeSec: 60 * 15, path: '/', sameSite: 'Lax' });
+            setCookie('access_token', lastAccessToken, {
+                maxAgeSec: 60 * 15,
+                path: '/',
+                sameSite: (isHttps && !isLocal) ? 'None' : 'Lax',
+                secure: (isHttps && !isLocal),
+            });
             log('Cookie access_token set manually.');
         });
 
         document.getElementById('btnLogout').addEventListener('click', async () => {
             try {
-                await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+                await fetch(`${API_URL}/auth/logout`, { method: 'POST', credentials: 'include' });
                 deleteCookie('access_token');
                 log('Logged out and access_token cookie cleared.');
             } catch (e) {
@@ -302,7 +321,7 @@
             }
         });
 
-        // ---- events: controls
+        // ====== events: controls ======
         document.getElementById('btnConnect').addEventListener('click', () => connectSocket());
 
         document.getElementById('btnLoadMore').addEventListener('click', () => {
