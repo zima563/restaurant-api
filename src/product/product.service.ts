@@ -33,7 +33,7 @@ export class ProductService {
   async findAll(query: any) {
     const { where, orderBy, take, skip } = buildProductQueryFilters(query);
 
-    const [products, total] = await Promise.all([
+    const [products] = await Promise.all([
       this.prisma.product.findMany({
         where,
         orderBy,
@@ -47,7 +47,7 @@ export class ProductService {
       if (p.imageUrl) p.imageUrl = process.env.MEDIA_BASE_URL + p.imageUrl;
     });
 
-    return { total, items: products };
+    return products;
   }
   async findOne(id: number) {
     const product = await this.prisma.product.findUnique({
