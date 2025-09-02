@@ -30,27 +30,25 @@ export class ProductService {
       include: { sizes: true, addons: true },
     });
   }
-
   async findAll(query: any) {
-    const { where, orderBy } = buildProductQueryFilters(query);
+    const { where, orderBy, take, skip } = buildProductQueryFilters(query);
 
-    const [products] = await Promise.all([
+    const [products, total] = await Promise.all([
       this.prisma.product.findMany({
         where,
         orderBy,
         include: { category: true },
+        ...(take ? { take, skip } : {}), // لو مفيش limit ما تبعتش take/skip نهائيًا
       }),
       this.prisma.product.count({ where }),
     ]);
-    products.forEach((product) => {
-      if (product.imageUrl) {
-        product.imageUrl = process.env.MEDIA_BASE_URL + product.imageUrl;
-      }
+
+    products.forEach((p) => {
+      if (p.imageUrl) p.imageUrl = process.env.MEDIA_BASE_URL + p.imageUrl;
     });
 
-    return products;
+    return { total, items: products };
   }
-
   async findOne(id: number) {
     const product = await this.prisma.product.findUnique({
       where: { id },
