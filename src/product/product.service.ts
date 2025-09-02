@@ -32,13 +32,11 @@ export class ProductService {
   }
 
   async findAll(query: any) {
-    const { where, take, skip, orderBy } = buildProductQueryFilters(query);
+    const { where, orderBy } = buildProductQueryFilters(query);
 
     const [products] = await Promise.all([
       this.prisma.product.findMany({
         where,
-        take,
-        skip,
         orderBy,
         include: { category: true },
       }),
