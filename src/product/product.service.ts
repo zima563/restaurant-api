@@ -32,10 +32,9 @@ export class ProductService {
   }
 
   async findAll(query: any) {
-    const { where, take, skip, orderBy, page, limit } =
-      buildProductQueryFilters(query);
+    const { where, take, skip, orderBy } = buildProductQueryFilters(query);
 
-    const [products, total] = await Promise.all([
+    const [products] = await Promise.all([
       this.prisma.product.findMany({
         where,
         take,
@@ -51,14 +50,7 @@ export class ProductService {
       }
     });
 
-    return {
-      data: products,
-      meta: {
-        total,
-        page,
-        lastPage: Math.ceil(total / limit),
-      },
-    };
+    return products;
   }
 
   async findOne(id: number) {
