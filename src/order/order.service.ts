@@ -1,13 +1,12 @@
+// src/order/order.service.ts
 import {
   Injectable,
   NotFoundException,
   BadRequestException,
   ForbiddenException,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { CartService } from 'src/cart/cart.service';
 import { UpdateOrderStatusDto } from './dto/update-status.dto';
 import { PaymentStatus } from 'generated/prisma';
 import { PaymobService } from 'src/paymob/paymob.service';
@@ -19,13 +18,17 @@ export class OrderService {
 
   constructor(
     private prisma: PrismaService,
-    private cartService: CartService,
     private notificationService: NotificationsService,
     private paymobService: PaymobService,
   ) {}
 
+  /** Fire-and-forget notification to avoid blocking the request */
+  private async notify(userId: number, title: string, body: string) {
+    this.notificationService.push(userId, title, body).catch(() => {});
+  }
+
   async createOrder(userId: number, dto: CreateOrderDto) {
-    // جيب كل عناصر الكارت بالمعلومات المطلوبة
+    // 1) Fetch cart with details
     const cartItems = await this.prisma.cartItem.findMany({
       where: { userId },
       include: {
@@ -34,39 +37,29 @@ export class OrderService {
         addons: { include: { addon: true } },
       },
     });
-
     if (!cartItems || cartItems.length === 0) {
       throw new BadRequestException('Cart is empty');
     }
 
-    // تأكيد عنوان التوصيل
+    // 2) Resolve address (provided or default)
     let selectedAddressId: number;
     if (dto.addressId) {
       const address = await this.prisma.address.findUnique({
         where: { id: dto.addressId },
       });
-
       if (!address || address.userId !== userId) {
         throw new BadRequestException('Invalid address');
       }
-
       selectedAddressId = address.id;
     } else {
-      const defaultAddress = await this.prisma.address.findFirst({
-        where: {
-          userId,
-          isDefault: true,
-        },
+      const def = await this.prisma.address.findFirst({
+        where: { userId, isDefault: true },
       });
-
-      if (!defaultAddress) {
-        throw new BadRequestException('No address found');
-      }
-
-      selectedAddressId = defaultAddress.id;
+      if (!def) throw new BadRequestException('No address found');
+      selectedAddressId = def.id;
     }
 
-    // حساب كل عنصر (unitPrice = سعر الحجم + إجمالي أسعار الإضافات)
+    // 3) Build order items (unitPrice = size + addons)
     const orderItemsData = cartItems.map((item) => {
       const sizePrice = item.size ? item.size.price : 0;
       const addonsTotal = item.addons.reduce(
@@ -80,22 +73,20 @@ export class OrderService {
         quantity: item.quantity,
         unitPrice,
         addons: {
-          create: item.addons.map((ai) => ({
-            addonId: ai.addonId,
-          })),
+          create: item.addons.map((ai) => ({ addonId: ai.addonId })),
         },
       };
     });
 
-    // إجمالي الطلب
+    // 4) Totals
     const productTotal = orderItemsData.reduce(
-      (sum, item) => sum + item.unitPrice * item.quantity,
+      (sum, it) => sum + it.unitPrice * it.quantity,
       0,
     );
     const shipping = cartItems.length > 0 ? this.SHIPPING_COST : 0;
     const grandTotal = productTotal + shipping;
 
-    // إنشاء الأوردر
+    // 5) Create order
     const order = await this.prisma.order.create({
       data: {
         userId,
@@ -116,11 +107,18 @@ export class OrderService {
       },
     });
 
-    // امسح الكارت والإضافات المرتبطة بعد الطلب
+    // 6) Clear cart
     await this.prisma.cartItemAddon.deleteMany({
       where: { cartItemId: { in: cartItems.map((i) => i.id) } },
     });
     await this.prisma.cartItem.deleteMany({ where: { userId } });
+
+    // 🔔 Notify: order placed
+    await this.notify(
+      userId,
+      'Order placed',
+      `Your order #${order.id} has been placed. Total: ${grandTotal.toFixed(2)} EGP`,
+    );
 
     return order;
   }
@@ -128,10 +126,7 @@ export class OrderService {
   async getOrders(userId: number) {
     return this.prisma.order.findMany({
       where: { userId },
-      include: {
-        orderItems: true,
-        address: true,
-      },
+      include: { orderItems: true, address: true },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -144,21 +139,22 @@ export class OrderService {
 
     const updated = await this.prisma.order.update({
       where: { id: orderId },
-      data: {
-        status: dto.status,
-      },
+      data: { status: dto.status },
     });
-    await this.notificationService.push(
+
+    // 🔔 Notify: status updated
+    await this.notify(
       order.userId,
-      'Order Update',
+      'Order update',
       `Your order #${order.id} status changed to ${dto.status}`,
     );
 
+    // timeline log
     await this.prisma.orderStatusLog.create({
       data: {
         orderId,
         status: dto.status,
-        note: `Status changed to ${dto.status}`, // ممكن تبقى optional
+        note: `Status changed to ${dto.status}`,
       },
     });
 
@@ -170,7 +166,6 @@ export class OrderService {
       where: { id: orderId },
       select: { userId: true },
     });
-
     if (!order || order.userId !== userId) return null;
 
     return this.prisma.orderStatusLog.findMany({
@@ -184,9 +179,7 @@ export class OrderService {
       include: {
         user: true,
         address: true,
-        orderItems: {
-          include: { product: true },
-        },
+        orderItems: { include: { product: true } },
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -198,10 +191,28 @@ export class OrderService {
     });
     if (!order) throw new NotFoundException('Order not found');
 
-    return this.prisma.order.update({
+    const updated = await this.prisma.order.update({
       where: { id: orderId },
       data: { paymentStatus: status },
     });
+
+    // 🔔 Notify: payment status updated
+    const friendly =
+      status === 'PAID'
+        ? 'Payment received'
+        : status === 'FAILED'
+          ? 'Payment failed'
+          : status === 'REFUNDED'
+            ? 'Payment refunded'
+            : 'Payment status updated';
+
+    await this.notify(
+      order.userId,
+      friendly,
+      `Order #${order.id}: ${friendly}.`,
+    );
+
+    return updated;
   }
 
   async getOrdersByUser(userId: number) {
@@ -233,20 +244,25 @@ export class OrderService {
     if (order.paymentStatus === 'PAID') {
       throw new BadRequestException('Order has already been paid');
     }
+
+    // 1) Paymob authenticate
     const token = await this.paymobService.authenticate();
 
+    // 2) Create Paymob order
     const merchantOrderId = `order-${orderId}-${Date.now()}`;
     const paymobOrderId = await this.paymobService.createOrder(
       token,
-      order.totalPrice * 100,
+      order.totalPrice * 100, // paymob uses cents
       merchantOrderId,
     );
 
+    // 3) Persist IDs
     await this.prisma.order.update({
       where: { id: order.id },
       data: { paymobOrderId, merchantOrderId },
     });
 
+    // 4) Billing data
     const billingData = {
       first_name: order.user.name,
       last_name: 'Customer',
@@ -261,14 +277,21 @@ export class OrderService {
       country: 'EG',
     };
 
+    // 5) Payment key + iframe URL
     const paymentKey = await this.paymobService.generatePaymentKey(
       token,
       order.totalPrice * 100,
       paymobOrderId,
       billingData,
     );
-
     const iframeUrl = this.paymobService.getPaymentIframeUrl(paymentKey);
+
+    // 🔔 Notify: payment initiated
+    await this.notify(
+      userId,
+      'Payment initiated',
+      `Payment started for order #${order.id}. Complete your payment to confirm.`,
+    );
 
     return { iframeUrl };
   }

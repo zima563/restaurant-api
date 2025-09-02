@@ -41,24 +41,20 @@ export class PaymobService {
       'source_data.type',
       'success',
     ];
-  
-    const concatenated = keys
-      .map((key) => query[key] ?? '')
-      .join('');
-  
+
+    const concatenated = keys.map((key) => query[key] ?? '').join('');
+
     const generatedHmac = crypto
       .createHmac('sha512', hmacSecret!)
       .update(concatenated)
       .digest('hex');
-  
+
     console.log('🔍 Concatenated:', concatenated);
     console.log('🔐 Generated HMAC:', generatedHmac);
     console.log('📦 Paymob HMAC:', query.hmac);
-  
+
     return generatedHmac === query.hmac;
   }
-  
-  
 
   async updateOrderPaymentStatus(merchantOrderId: string, success: boolean) {
     await this.prisma.order.update({
@@ -68,7 +64,23 @@ export class PaymobService {
       },
     });
   }
-  
+
+  async getOrderByMerchantId(merchantOrderId: string) {
+    return this.prisma.order.findUnique({
+      where: { merchantOrderId },
+    });
+  }
+
+  async getCartItems(orderId: number) {
+    return this.prisma.orderItem.findMany({
+      where: { orderId },
+      include: {
+        product: true,
+        size: true,
+        addons: { include: { addon: true } },
+      },
+    });
+  }
 
   // ✅ Get or cache token
   async authenticate(): Promise<string> {
@@ -115,7 +127,7 @@ export class PaymobService {
           merchant_order_id: merchantOrderId,
         }),
       );
-  
+
       return data.id;
     } catch (error) {
       console.error(

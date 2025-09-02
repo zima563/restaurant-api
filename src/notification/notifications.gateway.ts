@@ -24,7 +24,10 @@ function parseCookies(cookieHeader?: string): Record<string, string> {
 
 @WebSocketGateway({
   namespace: '/notifications',
-  cors: { origin: ['http://localhost:3000'], credentials: true },
+  cors: {
+    origin: ['http://localhost:3000', 'https://api.queen.kitchen'],
+    credentials: true,
+  },
 })
 export class NotificationsGateway
   implements OnGatewayConnection, OnGatewayDisconnect
