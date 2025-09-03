@@ -1,4 +1,11 @@
-import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { PaymentMethod } from '../../../generated/prisma';
 
@@ -12,4 +19,9 @@ export class CreateOrderDto {
     message: 'paymentMethod must be one of CASH, CREDIT_CARD, WALLET',
   })
   paymentMethod: PaymentMethod;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500, { message: 'لا تتجاوز 500 حرفاً' })
+  deliveryInstructions?: string;
 }

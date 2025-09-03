@@ -222,7 +222,8 @@ exports.Prisma.OrderScalarFieldEnum = {
   paymentMethod: 'paymentMethod',
   paymentStatus: 'paymentStatus',
   paymobOrderId: 'paymobOrderId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  deliveryInstructions: 'deliveryInstructions'
 };
 
 exports.Prisma.ReviewScalarFieldEnum = {
@@ -309,7 +310,8 @@ exports.Prisma.ProductAddonOrderByRelevanceFieldEnum = {
 };
 
 exports.Prisma.OrderOrderByRelevanceFieldEnum = {
-  merchantOrderId: 'merchantOrderId'
+  merchantOrderId: 'merchantOrderId',
+  deliveryInstructions: 'deliveryInstructions'
 };
 
 exports.Prisma.ReviewOrderByRelevanceFieldEnum = {

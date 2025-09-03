@@ -8,7 +8,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-status.dto';
-import { PaymentStatus } from 'generated/prisma';
+import { OrderStatus, PaymentStatus } from 'generated/prisma';
 import { PaymobService } from 'src/paymob/paymob.service';
 import { NotificationsService } from 'src/notification/notifications.service';
 
@@ -94,6 +94,7 @@ export class OrderService {
         paymentMethod: dto.paymentMethod,
         totalPrice: grandTotal,
         orderItems: { create: orderItemsData },
+        deliveryInstructions: dto.deliveryInstructions ?? null, // 👈
       },
       include: {
         orderItems: {
@@ -294,5 +295,44 @@ export class OrderService {
     );
 
     return { iframeUrl };
+  }
+
+  async updateDeliveryInstructions(
+    userId: number,
+    orderId: number,
+    instructions: string,
+  ) {
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+    });
+    if (!order) throw new NotFoundException('الطلب غير موجود');
+    if (order.userId !== userId)
+      throw new ForbiddenException('هذا الطلب ليس لك');
+
+    // نمنع التعديل بعد ما الطلب يطلع أو يخلص
+    const blocked: OrderStatus[] = ['ON_THE_WAY', 'DELIVERED', 'CANCELLED'];
+    if (blocked.includes(order.status)) {
+      throw new BadRequestException('لا يمكن تعديل التعليمات في هذه المرحلة');
+    }
+
+    const updated = await this.prisma.order.update({
+      where: { id: orderId },
+      data: { deliveryInstructions: instructions },
+    });
+
+    // (اختياري) ابعت Notification
+    try {
+      await this.notificationService.push(
+        order.userId,
+        'تم تحديث تعليمات التسليم',
+        `تم تحديث تعليمات طلبك رقم #${order.id}.`,
+      );
+    } catch {}
+
+    return {
+      ok: true,
+      orderId: updated.id,
+      deliveryInstructions: updated.deliveryInstructions,
+    };
   }
 }

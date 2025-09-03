@@ -168,6 +168,8 @@ model Order {
   orderItems      OrderItem[]
   createdAt       DateTime         @default(now())
   OrderStatusLog  OrderStatusLog[]
+
+  deliveryInstructions String?
 }
 
 model Review {

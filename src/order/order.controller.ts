@@ -9,6 +9,8 @@ import {
   Param,
   NotFoundException,
   Query,
+  Req,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -17,6 +19,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { UpdateOrderStatusDto } from './dto/update-status.dto';
 import { UpdatePaymentStatusDto } from './dto/update-payment-status.dto';
+import { UpdateDeliveryInstructionsDto } from './dto/update-delivery-instructions.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('orders')
@@ -79,5 +82,18 @@ export class OrderController {
   @UseGuards(JwtAuthGuard)
   payOrder(@Request() req, @Param('id') id: string) {
     return this.orderService.pay(+id, req.user.userId);
+  }
+
+  @Patch(':id/delivery-instructions')
+  async setDeliveryInstructions(
+    @Req() req: any,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateDeliveryInstructionsDto,
+  ) {
+    return this.orderService.updateDeliveryInstructions(
+      req.user.userId,
+      id,
+      dto.instructions,
+    );
   }
 }
