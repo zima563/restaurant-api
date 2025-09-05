@@ -90,16 +90,13 @@ export class FavoritesService {
       }),
     ]);
 
-    return {
-      page,
-      limit,
-      total,
-      items: items.map((x) => ({
-        ...x.product,
-        isFavorite: true,
-        favoritesCount: x.product._count.favoritedBy,
-      })),
-    };
+    let products = items.map((x) => ({
+      ...x.product,
+      isFavorite: true,
+      favoritesCount: x.product._count.favoritedBy,
+    }));
+
+    return products;
   }
 
   async isFavorite(userId: number, productId: number) {
