@@ -46,8 +46,7 @@ export class FavoritesService {
     return { ok: true, favored: true };
   }
 
-  async list(userId: number, page = 1, limit = 12, q?: string) {
-    const skip = (page - 1) * limit;
+  async list(userId: number,  q?: string) {
     const [items, total] = await this.prisma.$transaction([
       this.prisma.favorite.findMany({
         where: {
@@ -59,8 +58,7 @@ export class FavoritesService {
           }),
         },
         orderBy: { createdAt: 'desc' },
-        skip,
-        take: limit,
+      
         select: {
           createdAt: true,
           product: {

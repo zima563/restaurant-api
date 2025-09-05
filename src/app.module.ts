@@ -19,6 +19,7 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { NotificationsModule } from './notification/notification.module';
 import { NotificationsController } from './notification/notifications.controller';
 import { NotificationsService } from './notification/notifications.service';
+import { StatsModule } from './statics/stats.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { NotificationsService } from './notification/notifications.service';
     PaymobModule,
     FavoritesModule,
     ReviewsModule,
+    StatsModule,
     ConfigModule.forRoot({
       isGlobal: true, // 👈 يخليها متاحة في كل المشروع
     }),

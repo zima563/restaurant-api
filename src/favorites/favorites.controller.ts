@@ -52,11 +52,9 @@ export class FavoritesController {
   @Get()
   list(
     @Req() req: any,
-    @Query('page') page = '1',
-    @Query('limit') limit = '12',
     @Query('q') q?: string,
   ) {
-    return this.service.list(req.user.userId, Number(page), Number(limit), q);
+    return this.service.list(req.user.userId, q);
   }
 
   @Get('count/me')
