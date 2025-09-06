@@ -109,9 +109,6 @@ export class StatsService {
   }
 
   async bestSellers(q: BestSellersDto) {
-    const page  = q.page ?? 1;
-    const take  = Math.min(q.limit ?? 10, 100);
-    const skip  = (page - 1) * take;
     const sort  = (q.sortBy ?? 'revenue') === 'qty' ? 'qty' : 'revenue';
     const order = (q.order ?? 'desc').toUpperCase(); // ASC | DESC
 
@@ -159,7 +156,6 @@ export class StatsService {
         LIMIT ? OFFSET ?
         `,
         ...paramsBase,
-        take, skip
       );
 
     const productIds = rows.map(r => r.productId);
@@ -183,15 +179,6 @@ export class StatsService {
       };
     });
 
-    return {
-      items,
-      meta: {
-        page, limit: take, total,
-        totalPages: Math.ceil(total / take),
-        from, to,
-        sortBy: sort, order: order.toLowerCase(),
-        categoryId: q.categoryId ?? null,
-      },
-    };
+    return items;
   }
 }
