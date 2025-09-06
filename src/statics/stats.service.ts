@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { subDays, startOfDay, endOfDay, startOfMonth, endOfMonth, subMonths, eachMonthOfInterval, format } from 'date-fns';
+import { BestSellersDto } from './dto/best-sellers.dto';
 
 type Range = 'weekly' | 'monthly' | 'yearly';
 
@@ -104,6 +105,93 @@ export class StatsService {
         categories,
       },
       range,
+    };
+  }
+
+  async bestSellers(q: BestSellersDto) {
+    const page  = q.page ?? 1;
+    const take  = Math.min(q.limit ?? 10, 100);
+    const skip  = (page - 1) * take;
+    const sort  = (q.sortBy ?? 'revenue') === 'qty' ? 'qty' : 'revenue';
+    const order = (q.order ?? 'desc').toUpperCase(); // ASC | DESC
+
+    // حدود التاريخ (افتراضي: آخر 30 يوم)
+    const to   = q.to ? new Date(q.to) : new Date();
+    const from = q.from ? new Date(q.from) : new Date(to.getTime() - 30*24*3600*1000);
+
+    // نبني شروط إضافية للتصنيف لو مطلوبة
+    // نستعمل $queryRaw عشان نجمع بفاعلية
+    const whereCatJoin = q.categoryId ? 'JOIN `Product` p ON p.id = oi.productId AND p.categoryId = ?' : '';
+    const paramsBase: any[] = q.categoryId ? [q.categoryId, from, to] : [from, to];
+
+    // إجمالي الصفوف (للترقيم)
+    const totalRows: Array<{ total: number }> = await this.prisma.$queryRawUnsafe(
+      `
+      SELECT COUNT(*) AS total FROM (
+        SELECT oi.productId
+        FROM \`OrderItem\` oi
+        JOIN \`Order\` o ON o.id = oi.orderId
+        ${whereCatJoin}
+        WHERE o.paymentStatus = 'PAID'
+          AND o.createdAt BETWEEN ? AND ?
+        GROUP BY oi.productId
+      ) t
+      `,
+      ...paramsBase
+    );
+    const total = Number(totalRows?.[0]?.total || 0);
+
+    // البيانات المجمعة
+    const rows: Array<{ productId: number; qty: number; revenue: number }> =
+      await this.prisma.$queryRawUnsafe(
+        `
+        SELECT
+          oi.productId,
+          SUM(oi.quantity)                              AS qty,
+          SUM(oi.quantity * oi.unitPrice)               AS revenue
+        FROM \`OrderItem\` oi
+        JOIN \`Order\` o ON o.id = oi.orderId
+        ${whereCatJoin}
+        WHERE o.paymentStatus = 'PAID'
+          AND o.createdAt BETWEEN ? AND ?
+        GROUP BY oi.productId
+        ORDER BY ${sort} ${order}
+        LIMIT ? OFFSET ?
+        `,
+        ...paramsBase,
+        take, skip
+      );
+
+    const productIds = rows.map(r => r.productId);
+    const products = productIds.length
+      ? await this.prisma.product.findMany({
+          where: { id: { in: productIds } },
+          select: { id: true, name: true, imageUrl: true, category: { select: { id: true, name: true } } },
+        })
+      : [];
+
+    const productMap = new Map(products.map(p => [p.id, p]));
+    const items = rows.map(r => {
+      const p = productMap.get(r.productId);
+      return {
+        productId: r.productId,
+        name: p?.name ?? 'Unknown',
+        imageUrl: p?.imageUrl ? process.env.MEDIA_BASE_URL + p.imageUrl : null,
+        category: p?.category ?? null,
+        qty: Number(r.qty || 0),
+        revenue: Number((r.revenue || 0).toFixed(2)),
+      };
+    });
+
+    return {
+      items,
+      meta: {
+        page, limit: take, total,
+        totalPages: Math.ceil(total / take),
+        from, to,
+        sortBy: sort, order: order.toLowerCase(),
+        categoryId: q.categoryId ?? null,
+      },
     };
   }
 }
