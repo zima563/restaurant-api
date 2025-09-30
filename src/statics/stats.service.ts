@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { subDays, startOfDay, endOfDay, startOfMonth, endOfMonth, subMonths, eachMonthOfInterval, format } from 'date-fns';
 import { BestSellersDto } from './dto/best-sellers.dto';
@@ -108,77 +108,91 @@ export class StatsService {
     };
   }
 
-  async bestSellers(q: BestSellersDto) {
-    const sort  = (q.sortBy ?? 'revenue') === 'qty' ? 'qty' : 'revenue';
-    const order = (q.order ?? 'desc').toUpperCase(); // ASC | DESC
+ /**
+   * الأكثر مبيعًا مع فلترة اختيارية بالتاريخ
+   * @param from ISO string/date | undefined
+   * @param to   ISO string/date | undefined
+   * @param limit number = 10
+   */
+ async bestSellers(params?: { from?: Date | string; to?: Date | string; limit?: number }) {
+    const from = params?.from ? new Date(params.from) : undefined;
+    const to = params?.to ? new Date(params.to) : undefined;
+    const limit = Math.max(1, Math.min(params?.limit ?? 10, 100)); // سقف 100
 
-    // حدود التاريخ (افتراضي: آخر 30 يوم)
-    const to   = q.to ? new Date(q.to) : new Date();
-    const from = q.from ? new Date(q.from) : new Date(to.getTime() - 30*24*3600*1000);
+    // نبني أجزاء WHERE باراميترية، بدون string concat
+    const whereParts: string[] = [`o.status = 'DELIVERED'`];
+    const args: any[] = [];
 
-    // نبني شروط إضافية للتصنيف لو مطلوبة
-    // نستعمل $queryRaw عشان نجمع بفاعلية
-    const whereCatJoin = q.categoryId ? 'JOIN `Product` p ON p.id = oi.productId AND p.categoryId = ?' : '';
-    const paramsBase: any[] = q.categoryId ? [q.categoryId, from, to] : [from, to];
+    if (from) {
+      whereParts.push(`o.createdAt >= ?`);
+      args.push(from);
+    }
+    if (to) {
+      whereParts.push(`o.createdAt <= ?`);
+      args.push(to);
+    }
 
-    // إجمالي الصفوف (للترقيم)
-    const totalRows: Array<{ total: number }> = await this.prisma.$queryRawUnsafe(
-      `
-      SELECT COUNT(*) AS total FROM (
-        SELECT oi.productId
-        FROM \`OrderItem\` oi
-        JOIN \`Order\` o ON o.id = oi.orderId
-        ${whereCatJoin}
-        WHERE o.paymentStatus = 'PAID'
-          AND o.createdAt BETWEEN ? AND ?
-        GROUP BY oi.productId
-      ) t
-      `,
-      ...paramsBase
-    );
-    const total = Number(totalRows?.[0]?.total || 0);
+    const whereSql = whereParts.length ? `WHERE ${whereParts.join(' AND ')}` : '';
 
-    // البيانات المجمعة
-    const rows: Array<{ productId: number; qty: number; revenue: number }> =
-      await this.prisma.$queryRawUnsafe(
-        `
-        SELECT
-          oi.productId,
-          SUM(oi.quantity)                              AS qty,
-          SUM(oi.quantity * oi.unitPrice)               AS revenue
-        FROM \`OrderItem\` oi
-        JOIN \`Order\` o ON o.id = oi.orderId
-        ${whereCatJoin}
-        WHERE o.paymentStatus = 'PAID'
-          AND o.createdAt BETWEEN ? AND ?
-        GROUP BY oi.productId
-        ORDER BY ${sort} ${order}
-        LIMIT ? OFFSET ?
-        `,
-        ...paramsBase,
-      );
+    const sql = `
+      SELECT
+        oi.productId                    AS productId,
+        p.name                          AS name,
+        COALESCE(SUM(oi.quantity), 0)   AS qty,
+        COALESCE(SUM(oi.unitPrice * oi.quantity), 0) AS revenue,
+        p.imageUrl                      AS imageUrl
+      FROM OrderItem oi
+      JOIN \`Order\` o   ON o.id = oi.orderId
+      JOIN Product  p   ON p.id = oi.productId
+      ${whereSql}
+      GROUP BY oi.productId
+      ORDER BY qty DESC, revenue DESC
+      LIMIT ?
+    `;
 
-    const productIds = rows.map(r => r.productId);
-    const products = productIds.length
-      ? await this.prisma.product.findMany({
-          where: { id: { in: productIds } },
-          select: { id: true, name: true, imageUrl: true, category: { select: { id: true, name: true } } },
-        })
-      : [];
+    try {
+      const rows = await this.prisma.$queryRaw<BestSellersDto[]>(sql as any, ...args, limit);
+      // (اختياري) معالجة imageUrl بالـ MEDIA_BASE_URL
+      const base = process.env.MEDIA_BASE_URL ?? '';
+      return rows.map(r => ({
+        ...r,
+        imageUrl: r.imageUrl ? base + r.imageUrl : null,
+      }));
+    } catch (e) {
+      // لو حصل Error (سواء P2010/P1017 أو غيره) نوفّر Fallback باستخدام Prisma API
+      try {
+        const where: any = { order: { status: 'DELIVERED' as const } };
+        if (from || to) {
+          where.order.createdAt = {};
+          if (from) where.order.createdAt.gte = from;
+          if (to)   where.order.createdAt.lte = to;
+        }
 
-    const productMap = new Map(products.map(p => [p.id, p]));
-    const items = rows.map(r => {
-      const p = productMap.get(r.productId);
-      return {
-        productId: r.productId,
-        name: p?.name ?? 'Unknown',
-        imageUrl: p?.imageUrl ? process.env.MEDIA_BASE_URL + p.imageUrl : null,
-        category: p?.category ?? null,
-        qty: Number(r.qty || 0),
-        revenue: Number((r.revenue || 0).toFixed(2)),
-      };
-    });
+        // هنجمع بالـ JS: ده أبطأ من الـ SQL في الداتا الكبيرة، لكنه آمن كـ خطة B
+        const items = await this.prisma.orderItem.findMany({
+          where,
+          select: { productId: true, quantity: true, unitPrice: true, product: { select: { name: true, imageUrl: true } } },
+        });
 
-    return items;
+        const agg = new Map<number, { name: string; qty: number; revenue: number; imageUrl: string | null }>();
+        for (const it of items) {
+          const prev = agg.get(it.productId) ?? { name: it.product?.name ?? `#${it.productId}`, qty: 0, revenue: 0, imageUrl: it.product?.imageUrl ?? null };
+          prev.qty += it.quantity;
+          prev.revenue += it.unitPrice * it.quantity;
+          if (prev.imageUrl == null && it.product?.imageUrl) prev.imageUrl = it.product.imageUrl;
+          agg.set(it.productId, prev);
+        }
+
+        const base = process.env.MEDIA_BASE_URL ?? '';
+        const out = [...agg.entries()]
+          .map(([productId, v]) => ({ productId, name: v.name, qty: v.qty, revenue: v.revenue, imageUrl: v.imageUrl ? base + v.imageUrl : null }))
+          .sort((a, b) => (b.qty - a.qty) || (b.revenue - a.revenue))
+          .slice(0, limit);
+
+        return out;
+      } catch (fallbackErr) {   
+        throw new InternalServerErrorException('Failed to compute best sellers');
+      }
+    }
   }
 }

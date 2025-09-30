@@ -12,7 +12,15 @@ export class StatsController {
   }
 
   @Get('best-sellers')
-  bestSellers(@Query(new ValidationPipe({ transform: true })) q: BestSellersDto) {
-    return this.stats.bestSellers(q);
+  bestSellers(
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.stats.bestSellers({
+      from,
+      to,
+      limit: limit ? Number(limit) : undefined,
+    });
   }
 }

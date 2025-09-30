@@ -23,4 +23,5 @@ export class BestSellersDto {
 
   @IsOptional() @Type(() => Number) @IsPositive()
   limit?: number = 10;
+    imageUrl: any;
 }
