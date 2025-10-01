@@ -37,37 +37,53 @@ export class StatsService {
     const { from, to } = this.buildRange(range);
 
     // KPIs
-    const [ordersCount, customersCount, totalRevenue] = await Promise.all([
-      this.prisma.order.count({ where: { createdAt: { gte: from, lte: to } } }),
-      this.prisma.user.count(),
-      this.prisma.order.aggregate({
-        _sum: { totalPrice: true },
-        where: { createdAt: { gte: from, lte: to }, paymentStatus: 'PAID' },
-      }),
-    ]);
+    const [ordersCount, customersCount, totalRevenue, paidOrdersCount] =
+      await Promise.all([
+        this.prisma.order.count({
+          where: { createdAt: { gte: from, lte: to } },
+        }),
+        this.prisma.user.count(),
+        this.prisma.order.aggregate({
+          _sum: { totalPrice: true },
+          where: { createdAt: { gte: from, lte: to }, paymentStatus: 'PAID' },
+        }),
+        this.prisma.order.count({
+          where: { createdAt: { gte: from, lte: to }, paymentStatus: 'PAID' },
+        }),
+      ]);
 
-    // إيراد شهري لآخر 12 شهر (لمنحنى)
+    // شهور آخر 12 شهر
     const months = eachMonthOfInterval({
       start: startOfMonth(subMonths(new Date(), 11)),
       end: endOfMonth(new Date()),
     });
-    const revenueByMonthRaw = await this.prisma.order.groupBy({
-      by: ['createdAt'],
-      _sum: { totalPrice: true },
+
+    // إجمالي الإيراد + عدد الطلبات لكل شهر
+    const ordersByMonthRaw = await this.prisma.order.findMany({
       where: {
         paymentStatus: 'PAID',
         createdAt: { gte: months[0], lte: months[months.length - 1] },
       },
-    });
-    const revenueByMonth = months.map((m) => {
-      const key = format(m, 'yyyy-MM');
-      const sum = revenueByMonthRaw
-        .filter((r) => format(r.createdAt, 'yyyy-MM') === key)
-        .reduce((acc, r) => acc + (r._sum.totalPrice || 0), 0);
-      return { month: format(m, 'MMM'), value: Number(sum.toFixed(2)) };
+      select: { createdAt: true, totalPrice: true },
     });
 
-    // عدد الطلبات لكل يوم من الأسبوع (للأعمدة الأسبوعية)
+    const revenueByMonth = months.map((m) => {
+      const key = format(m, 'yyyy-MM');
+      const sameMonthOrders = ordersByMonthRaw.filter(
+        (o) => format(o.createdAt, 'yyyy-MM') === key,
+      );
+      const sum = sameMonthOrders.reduce(
+        (acc, o) => acc + (o.totalPrice || 0),
+        0,
+      );
+      return {
+        month: format(m, 'MMM'),
+        value: Number(sum.toFixed(2)),
+        ordersNum: sameMonthOrders.length, // ✅ عدد الأوردرات المدفوعة لكل شهر
+      };
+    });
+
+    // عدد الطلبات لكل يوم من الأسبوع
     const orders = await this.prisma.order.findMany({
       where: { createdAt: { gte: subDays(new Date(), 6) } },
       select: { createdAt: true },
@@ -79,43 +95,39 @@ export class StatsService {
         .length,
     }));
 
-    // الأقسام الأكثر طلبًا (Donut)
+    // الأقسام الأكثر طلبًا
     const topCategoriesRaw = await this.prisma.orderItem.groupBy({
       by: ['productId'],
       _sum: { quantity: true },
       where: { order: { createdAt: { gte: from, lte: to } } },
     });
-
-    // اجلب أسماء التصنيفات عبر المنتج -> الكاتيجوري
     const productIds = topCategoriesRaw.map((r) => r.productId);
     const products = await this.prisma.product.findMany({
       where: { id: { in: productIds } },
-      select: { id: true, category: { select: { id: true, name: true } } },
+      select: {
+        id: true,
+        category: { select: { id: true, name: true } },
+      },
     });
-    const catMap = new Map<number, string>();
-    products.forEach((p) => {
-      if (p.category) catMap.set(p.category.id, p.category.name);
-    });
-
-    // نجمع بالكategory name
     const accCat: Record<string, number> = {};
     for (const r of topCategoriesRaw) {
       const prod = products.find((p) => p.id === r.productId);
-      const name = prod?.category?.name || 'أخرى';
+      const name = prod?.category?.name || 'Other';
       accCat[name] = (accCat[name] || 0) + (r._sum.quantity || 0);
     }
     const categories = Object.entries(accCat)
-      .map(([name, count]) => ({ name, value: count }))
+      .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
 
     return {
       kpis: {
-        ordersCount,
+        ordersCount, // كل الأوردرات
+        paidOrdersCount, // ✅ الأوردرات المدفوعة
         customersCount,
         totalRevenue: Number((totalRevenue._sum.totalPrice || 0).toFixed(2)),
       },
       charts: {
-        revenueByMonth,
+        revenueByMonth, // ✅ فيها month, value, ordersNum
         ordersByWeekday,
         categories,
       },
