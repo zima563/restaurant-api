@@ -85,6 +85,7 @@ export class CartService {
       const addons = await this.prisma.productAddon.findMany({
         where: { id: { in: dto.addonIds } },
       });
+
       const valid = addons.every((a) => a.productId === dto.productId);
       if (!valid) throw new BadRequestException('Invalid addon(s)');
 
@@ -99,14 +100,19 @@ export class CartService {
         productId: dto.productId,
         sizeId: dto.sizeId,
         quantity: dto.quantity,
-        addons: {
-          create: addonsData, // بيربط cartItemAddon بالـ addonId مباشرة
-        },
+        addons:
+          dto.addonIds && dto.addonIds.length > 0
+            ? {
+                create: dto.addonIds.map((addonId) => ({
+                  addon: { connect: { id: addonId } }, // ✅
+                })),
+              }
+            : undefined,
       },
       include: {
         size: true,
         product: true,
-        addons: { include: { addon: true } },
+        addons: { include: { addon: true } }, // ✅ يجيب تفاصيل الإضافات
       },
     });
 

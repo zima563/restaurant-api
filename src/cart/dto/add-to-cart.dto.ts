@@ -1,4 +1,4 @@
-import { IsNumber, Min } from 'class-validator';
+import { IsArray, isArray, IsNumber, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class AddToCartDto {
@@ -10,6 +10,7 @@ export class AddToCartDto {
   @IsNumber()
   sizeId: number;
 
+  @IsArray()
   addonIds?: number[];
 
   @Type(() => Number)
