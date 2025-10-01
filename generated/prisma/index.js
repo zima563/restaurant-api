@@ -367,7 +367,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "F:\\resturant\\restaurant-api\\generated\\prisma",
+      "value": "D:\\projects\\resturent\\restaurant-api\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -385,11 +385,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "F:\\resturant\\restaurant-api\\prisma\\schema.prisma",
+    "sourceFilePath": "D:\\projects\\resturent\\restaurant-api\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
+    "rootEnvPath": "../../.env",
     "schemaEnvPath": "../../.env"
   },
   "relativePath": "../../prisma",
