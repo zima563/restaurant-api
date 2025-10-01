@@ -62,59 +62,56 @@ export class CartService {
   }
 
   async addToCart(userId: number, dto: AddToCartDto) {
-    // تأكد المنتج موجود
+    // ✅ تحقق إن المنتج موجود
     const product = await this.prisma.product.findUnique({
       where: { id: dto.productId },
     });
     if (!product) throw new NotFoundException('Product not found');
 
-    // تأكد الحجم تابع للمنتج
+    // ✅ تحقق إن الحجم تابع للمنتج
     if (dto.sizeId) {
       const size = await this.prisma.productSize.findUnique({
         where: { id: dto.sizeId },
       });
-      if (!size || size.productId !== dto.productId)
+      if (!size || size.productId !== dto.productId) {
         throw new BadRequestException('Invalid size');
+      }
     }
 
-    // تأكد الإضافات تابعة للمنتج
+    // ✅ تحقق إن الـ addons فعلاً تخص المنتج
+    let addonsTotal = 0;
+    let addonsData: { addonId: number }[] = [];
     if (dto.addonIds && dto.addonIds.length > 0) {
       const addons = await this.prisma.productAddon.findMany({
         where: { id: { in: dto.addonIds } },
       });
-      const valid = addons.every((addon) => addon.productId === dto.productId);
+      const valid = addons.every((a) => a.productId === dto.productId);
       if (!valid) throw new BadRequestException('Invalid addon(s)');
+
+      addonsTotal = addons.reduce((sum, a) => sum + a.price, 0);
+      addonsData = addons.map((a) => ({ addonId: a.id }));
     }
 
-    // أضف العنصر للسلة
+    // ✅ أنشئ عنصر السلة + احفظ الـ addons في جدول الوسيط
     const cartItem = await this.prisma.cartItem.create({
       data: {
         userId,
         productId: dto.productId,
         sizeId: dto.sizeId,
         quantity: dto.quantity,
-        addons:
-          dto.addonIds && dto.addonIds.length > 0
-            ? {
-                create: dto.addonIds.map((addonId) => ({
-                  addon: { connect: { id: addonId } },
-                })),
-              }
-            : undefined,
+        addons: {
+          create: addonsData, // بيربط cartItemAddon بالـ addonId مباشرة
+        },
       },
       include: {
         size: true,
-        addons: { include: { addon: true } },
         product: true,
+        addons: { include: { addon: true } },
       },
     });
 
-    // ارجع العنصر مع الحسابات
+    // ✅ حساب السعر الكلي
     const sizePrice = cartItem.size ? cartItem.size.price : 0;
-    const addonsTotal = cartItem.addons.reduce(
-      (sum, ai) => sum + ai.addon.price,
-      0,
-    );
     const itemTotal = (sizePrice + addonsTotal) * cartItem.quantity;
 
     return {
