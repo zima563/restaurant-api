@@ -119,6 +119,31 @@ export class StatsService {
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
 
+    const orderItemsWithFood = await this.prisma.orderItem.findMany({
+      where: { order: { createdAt: { gte: from, lte: to } } },
+      select: {
+        quantity: true,
+        product: { select: { foodType: true } },
+      },
+    });
+
+    const foodAgg: Record<string, number> = {};
+    let totalQty = 0;
+
+    for (const it of orderItemsWithFood) {
+      const type = it.product?.foodType || 'UNKNOWN';
+      foodAgg[type] = (foodAgg[type] || 0) + it.quantity;
+      totalQty += it.quantity;
+    }
+
+    const foodTypeDistribution = Object.entries(foodAgg).map(
+      ([foodType, qty]) => ({
+        foodType,
+        value: qty,
+        percent: totalQty > 0 ? Number(((qty / totalQty) * 100).toFixed(2)) : 0,
+      }),
+    );
+
     return {
       kpis: {
         ordersCount, // كل الأوردرات
@@ -130,6 +155,7 @@ export class StatsService {
         revenueByMonth, // ✅ فيها month, value, ordersNum
         ordersByWeekday,
         categories,
+        foodTypeDistribution,
       },
       range,
     };
