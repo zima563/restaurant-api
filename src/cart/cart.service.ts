@@ -78,54 +78,86 @@ export class CartService {
       }
     }
 
-    // ✅ تحقق إن الـ addons فعلاً تخص المنتج
-    let addonsTotal = 0;
-    let addonsData: { addonId: number }[] = [];
-    if (dto.addonIds && dto.addonIds.length > 0) {
+    // ✅ تحقق من الإضافات
+    let addonsIds = dto.addonIds ?? [];
+    if (addonsIds.length > 0) {
       const addons = await this.prisma.productAddon.findMany({
-        where: { id: { in: dto.addonIds } },
+        where: { id: { in: addonsIds } },
       });
-
       const valid = addons.every((a) => a.productId === dto.productId);
       if (!valid) throw new BadRequestException('Invalid addon(s)');
-
-      addonsTotal = addons.reduce((sum, a) => sum + a.price, 0);
-      addonsData = addons.map((a) => ({ addonId: a.id }));
     }
 
-    // ✅ أنشئ عنصر السلة + احفظ الـ addons في جدول الوسيط
+    // ✅ شوف هل فيه item بنفس (product + size + addons)؟
+    const existingItem = await this.prisma.cartItem.findFirst({
+      where: {
+        userId,
+        productId: dto.productId,
+        sizeId: dto.sizeId,
+        addons: {
+          every: {
+            addonId: { in: addonsIds },
+          },
+          some: {
+            addonId: { in: addonsIds },
+          },
+        },
+      },
+      include: {
+        size: true,
+        product: true,
+        addons: { include: { addon: true } },
+      },
+    });
+
+    if (existingItem) {
+      // ✅ لو موجود → زود الكمية فقط
+      const updated = await this.prisma.cartItem.update({
+        where: { id: existingItem.id },
+        data: { quantity: existingItem.quantity + dto.quantity },
+        include: {
+          size: true,
+          product: true,
+          addons: { include: { addon: true } },
+        },
+      });
+
+      const sizePrice = updated.size ? updated.size.price : 0;
+      const addonsTotal = updated.addons.reduce(
+        (sum, ai) => sum + ai.addon.price,
+        0,
+      );
+      const itemTotal = (sizePrice + addonsTotal) * updated.quantity;
+
+      return { ...updated, sizePrice, addonsTotal, itemTotal };
+    }
+
+    // ✅ لو مش موجود → أنشئ عنصر جديد
     const cartItem = await this.prisma.cartItem.create({
       data: {
         userId,
         productId: dto.productId,
         sizeId: dto.sizeId,
         quantity: dto.quantity,
-        addons:
-          dto.addonIds && dto.addonIds.length > 0
-            ? {
-                create: dto.addonIds.map((addonId) => ({
-                  addon: { connect: { id: addonId } }, // ✅
-                })),
-              }
-            : undefined,
+        addons: {
+          create: addonsIds.map((addonId) => ({ addonId })),
+        },
       },
       include: {
         size: true,
         product: true,
-        addons: { include: { addon: true } }, // ✅ يجيب تفاصيل الإضافات
+        addons: { include: { addon: true } },
       },
     });
 
-    // ✅ حساب السعر الكلي
     const sizePrice = cartItem.size ? cartItem.size.price : 0;
+    const addonsTotal = cartItem.addons.reduce(
+      (sum, ai) => sum + ai.addon.price,
+      0,
+    );
     const itemTotal = (sizePrice + addonsTotal) * cartItem.quantity;
 
-    return {
-      ...cartItem,
-      sizePrice,
-      addonsTotal,
-      itemTotal,
-    };
+    return { ...cartItem, sizePrice, addonsTotal, itemTotal };
   }
 
   async updateCartItem(userId: number, cartItemId: number, dto: UpdateCartDto) {
