@@ -35,6 +35,9 @@ export class MailService {
       port,
       secure, // true عادةً للـ 465، false للـ 587 (STARTTLS)
       auth: { user, pass },
+      tls: {
+        rejectUnauthorized: false, // جرب تضيفها لو لسه المشكلة
+      },
     });
   }
 
