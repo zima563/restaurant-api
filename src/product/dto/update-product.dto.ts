@@ -1,6 +1,24 @@
-import { IsEnum, IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
-import { FoodType } from './create-product.dto';
+import { IsEnum, IsInt, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
+import { FoodType } from './create-product.dto';
+
+class SizeDto {
+  @IsString()
+  name: string;
+
+  @IsNumber()
+  @Type(() => Number)
+  price: number;
+}
+
+class AddonDto {
+  @IsString()
+  name: string;
+
+  @IsNumber()
+  @Type(() => Number)
+  price: number;
+}
 
 export class UpdateProductDto {
   @IsString()
@@ -24,4 +42,14 @@ export class UpdateProductDto {
   @IsNumber()
   @Type(() => Number)
   price?: number;
+
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => SizeDto)
+  sizes?: SizeDto[];
+
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => AddonDto)
+  addons?: AddonDto[];
 }
