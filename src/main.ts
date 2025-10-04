@@ -18,14 +18,11 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  // اكتب الـ origins المسموح بيها في ENV كقائمة مفصولة بفواصل
-  // مثال: CORS_ORIGINS=http://localhost:5173,https://app.yourdomain.com
   const allowed = new Set(parseOrigins(process.env.CORS_ORIGINS));
 
   app.enableCors({
     origin: (origin, cb) => {
-      // طلبات بدون Origin (مثلاً من Postman) نسمح لها
-      if (!origin) return cb(null, true);
+      if (!origin) return cb(null, true); // Postman أو requests بدون Origin
       if (allowed.has(origin)) return cb(null, true);
       return cb(new Error(`CORS blocked for origin: ${origin}`), false);
     },
@@ -40,8 +37,6 @@ async function bootstrap() {
     ],
   });
 
-  // ✳️ متحتاجش Middleware يدوي للـ OPTIONS؛ enableCors كافي
-  // سيب ثابتاتك زي ما هي:
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     transform: true,
