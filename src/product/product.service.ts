@@ -98,6 +98,16 @@ export class ProductService {
       this.imageService.deleteImage(product.imageUrl);
     }
 
+    // 🧹 امسح الـ علاقات المرتبطة
+  await this.prisma.$transaction([
+    this.prisma.productSize.deleteMany({ where: { productId: id } }),
+    this.prisma.productAddon.deleteMany({ where: { productId: id } }),
+    this.prisma.cartItem.deleteMany({ where: { productId: id } }),
+    this.prisma.orderItem.deleteMany({ where: { productId: id } }),
+    this.prisma.favorite.deleteMany({ where: { productId: id } }),
+    this.prisma.review.deleteMany({ where: { productId: id } }),
+  ]);
+
     return this.prisma.product.delete({ where: { id } });
   }
 }
