@@ -37,7 +37,8 @@ export class ProductService {
       this.prisma.product.findMany({
         where,
         orderBy,
-        include: { category: true },
+        include: { category: true,
+        sizes: true },
         ...(take ? { take, skip } : {}), // لو مفيش limit ما تبعتش take/skip نهائيًا
       }),
       this.prisma.product.count({ where }),

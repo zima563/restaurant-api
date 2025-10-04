@@ -71,6 +71,7 @@ export class FavoritesService {
               isAvailable: true,
               categoryId: true,
               foodType: true,
+              sizes: true,
               _count: { select: { favoritedBy: true } },
             },
           },
