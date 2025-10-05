@@ -197,7 +197,7 @@ export class StatsService {
     // هات بيانات المنتجات
     const products = await this.prisma.product.findMany({
       where: { id: { in: productIds } },
-      include: { category: true },
+      include: { category: true, sizes: true, addons: true },
     });
 
     const base = process.env.MEDIA_BASE_URL ?? '';
