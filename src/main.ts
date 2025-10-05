@@ -18,19 +18,16 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  // اكتب الـ origins المسموح بيها في ENV كقائمة مفصولة بفواصل
-  // مثال: CORS_ORIGINS=http://localhost:5173,https://app.yourdomain.com
   const allowed = new Set(parseOrigins(process.env.CORS_ORIGINS));
 
   app.enableCors({
-    origin: (origin, cb) => {
-      // طلبات بدون Origin (مثلاً من Postman) نسمح لها
-      if (!origin) return cb(null, true);
-      if (allowed.has(origin)) return cb(null, true);
-      return cb(new Error(`CORS blocked for origin: ${origin}`), false);
-    },
+    origin: [
+      'https://queen.kitchen',
+      'https://api.queen.kitchen',
+      'http://localhost:5173',
+    ],
     credentials: true,
-    methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
       'Origin',
       'X-Requested-With',
@@ -39,9 +36,8 @@ async function bootstrap() {
       'Authorization',
     ],
   });
+  
 
-  // ✳️ متحتاجش Middleware يدوي للـ OPTIONS؛ enableCors كافي
-  // سيب ثابتاتك زي ما هي:
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     transform: true,

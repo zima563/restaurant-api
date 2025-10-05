@@ -37,7 +37,8 @@ export class ProductService {
       this.prisma.product.findMany({
         where,
         orderBy,
-        include: { category: true },
+        include: { category: true,
+        sizes: true },
         ...(take ? { take, skip } : {}), // لو مفيش limit ما تبعتش take/skip نهائيًا
       }),
       this.prisma.product.count({ where }),
@@ -68,26 +69,63 @@ export class ProductService {
   async update(id: number, dto: UpdateProductDto, newImageUrl?: string) {
     const product = await this.prisma.product.findUnique({ where: { id } });
     if (!product) throw new NotFoundException('Product not found');
-
-    const category = await this.prisma.category.findUnique({
-      where: { id: dto.categoryId },
-    });
-
-    if (dto.categoryId && !category) {
-      throw new NotFoundException('Category not found');
+  
+    if (dto.categoryId) {
+      const category = await this.prisma.category.findUnique({
+        where: { id: dto.categoryId },
+      });
+      if (!category) throw new NotFoundException('Category not found');
     }
+  
     if (newImageUrl && product.imageUrl) {
       this.imageService.deleteImage(product.imageUrl);
     }
 
-    return this.prisma.product.update({
+    const { sizes, addons, ...productData } = dto;
+  
+    // ✅ Update product basic info
+    const updatedProduct = await this.prisma.product.update({
       where: { id },
       data: {
-        ...dto,
+        ...productData,
         imageUrl: newImageUrl ?? product.imageUrl,
       },
     });
+  
+    // ✅ Update sizes (replace old with new if provided)
+    if (dto.sizes) {
+      await this.prisma.productSize.deleteMany({ where: { productId: id } });
+      await this.prisma.productSize.createMany({
+        data: dto.sizes.map((s) => ({
+          productId: id,
+          name: s.name,
+          price: s.price,
+        })),
+      });
+    }
+  
+    // ✅ Update addons (replace old with new if provided)
+    if (dto.addons) {
+      await this.prisma.productAddon.deleteMany({ where: { productId: id } });
+      await this.prisma.productAddon.createMany({
+        data: dto.addons.map((a) => ({
+          productId: id,
+          name: a.name,
+          price: a.price,
+        })),
+      });
+    }
+  
+    return this.prisma.product.findUnique({
+      where: { id },
+      include: {
+        sizes: true,
+        addons: true,
+        category: true,
+      },
+    });
   }
+  
 
   async remove(id: number) {
     const product = await this.prisma.product.findUnique({ where: { id } });
@@ -96,6 +134,16 @@ export class ProductService {
     if (product.imageUrl) {
       this.imageService.deleteImage(product.imageUrl);
     }
+
+    // 🧹 امسح الـ علاقات المرتبطة
+  await this.prisma.$transaction([
+    this.prisma.productSize.deleteMany({ where: { productId: id } }),
+    this.prisma.productAddon.deleteMany({ where: { productId: id } }),
+    this.prisma.cartItem.deleteMany({ where: { productId: id } }),
+    this.prisma.orderItem.deleteMany({ where: { productId: id } }),
+    this.prisma.favorite.deleteMany({ where: { productId: id } }),
+    this.prisma.review.deleteMany({ where: { productId: id } }),
+  ]);
 
     return this.prisma.product.delete({ where: { id } });
   }
