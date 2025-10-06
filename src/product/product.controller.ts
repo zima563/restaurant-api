@@ -88,10 +88,19 @@ export class ProductController {
   update(
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,
-    @Body() dto: UpdateProductDto,
+    @Body() dto: any,
   ) {
+    const sizes = dto.sizes ? JSON.parse(dto.sizes) : undefined;
+    const addons = dto.addons ? JSON.parse(dto.addons) : undefined;
     const imageUrl = file ? `/uploads/products/${file.filename}` : undefined;
-    return this.productService.update(+id, dto, imageUrl);
+    return this.productService.update(+id,{
+      ...dto,
+      price: Number(dto.price),
+      categoryId: Number(dto.categoryId),
+      sizes,
+      addons,
+    },
+    imageUrl,);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
