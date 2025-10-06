@@ -25,18 +25,15 @@ export class PaymobController {
 
   @Get('callback')
   @HttpCode(200)
-  async handleCallback(@Query() query: any, @Res() res:Response) {
+  async handleCallback(@Query() query: any, @Res() res: Response) {
     const isValid = this.paymobService.verifyHmac(query);
 
     if (!isValid) {
-      let order = await this.paymobService.getOrderByMerchantId(
-        query.merchant_order_id,
-      );
+      // handle invalid HMAC
+      const order = await this.paymobService.getOrderByMerchantId(query.merchant_order_id);
       if (order) {
         const cartItems = await this.paymobService.getCartItems(order.id);
-        const itemsDescription = cartItems
-          .map((item) => `${item.quantity} x ${item.product.name}`)
-          .join(', ');
+        const itemsDescription = cartItems.map((item) => `${item.quantity} x ${item.product.name}`).join(', ');
         const grandTotal = order.totalPrice;
         await this.notify(
           order.userId,
@@ -44,19 +41,19 @@ export class PaymobController {
           `Your payment for order #${order.id} failed. Items: ${itemsDescription}. Total: ${grandTotal.toFixed(2)} EGP`,
         );
       }
-      throw new BadRequestException('Invalid HMAC signature');
+
+      // ❌ redirect to failure page
+      return res.redirect('https://queen.kitchen/paymob/callback?status=failed');
     }
+
     const success = query.success === 'true';
+    await this.paymobService.updateOrderPaymentStatus(query.merchant_order_id, success);
 
     if (success) {
-      let order = await this.paymobService.getOrderByMerchantId(
-        query.merchant_order_id,
-      );
+      const order = await this.paymobService.getOrderByMerchantId(query.merchant_order_id);
       if (order) {
         const cartItems = await this.paymobService.getCartItems(order.id);
-        const itemsDescription = cartItems
-          .map((item) => `${item.quantity} x ${item.product.name}`)
-          .join(', ');
+        const itemsDescription = cartItems.map((item) => `${item.quantity} x ${item.product.name}`).join(', ');
         const grandTotal = order.totalPrice;
         await this.notify(
           order.userId,
@@ -64,13 +61,12 @@ export class PaymobController {
           `Your payment for order #${order.id} was successful! Items: ${itemsDescription}. Total: ${grandTotal.toFixed(2)} EGP`,
         );
       }
+
+      // ✅ redirect to success page
+      return res.redirect('https://queen.kitchen/paymob/callback?status=success');
     }
 
-    await this.paymobService.updateOrderPaymentStatus(
-      query.merchant_order_id,
-      success,
-    );
-
-    return res.redirect('https://queen.kitchen/paymob/callback');
+    // fallback redirect
+    return res.redirect('https://queen.kitchen/paymob/callback?status=unknown');
   }
 }
