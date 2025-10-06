@@ -125,6 +125,7 @@ export class PaymobService {
           currency: 'EGP',
           items: [],
           merchant_order_id: merchantOrderId,
+          success_url: "https://queen.kitchen/paymob/callback",
         }),
       );
 

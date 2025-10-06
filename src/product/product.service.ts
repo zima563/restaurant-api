@@ -102,10 +102,10 @@ export class ProductService {
     });
   
     // ✅ 5. تحديث الأحجام (sizes)
-    if (sizes) {
+    if (dto.sizes) {
       await this.prisma.productSize.deleteMany({ where: { productId: id } });
       await this.prisma.productSize.createMany({
-        data: sizes.map((s) => ({
+        data: dto.sizes.map((s) => ({
           productId: id,
           name: s.name,
           price: s.price,
@@ -114,10 +114,10 @@ export class ProductService {
     }
   
     // ✅ 6. تحديث الإضافات (addons)
-    if (addons) {
+    if (dto.addons) {
       await this.prisma.productAddon.deleteMany({ where: { productId: id } });
       await this.prisma.productAddon.createMany({
-        data: addons.map((a) => ({
+        data: dto.addons.map((a) => ({
           productId: id,
           name: a.name,
           price: a.price,
