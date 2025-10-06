@@ -128,7 +128,7 @@ model CartItemAddon {
   id         Int          @id @default(autoincrement())
   cartItem   CartItem     @relation(fields: [cartItemId], references: [id])
   cartItemId Int
-  addon      ProductAddon @relation(fields: [addonId], references: [id])
+  addon      ProductAddon @relation(fields: [addonId], references: [id], onDelete: Cascade)
   addonId    Int
 }
 
@@ -149,7 +149,7 @@ model OrderItemAddon {
   id          Int          @id @default(autoincrement())
   orderItem   OrderItem    @relation(fields: [orderItemId], references: [id])
   orderItemId Int
-  addon       ProductAddon @relation(fields: [addonId], references: [id])
+  addon       ProductAddon @relation(fields: [addonId], references: [id], onDelete: Cascade)
   addonId     Int
 }
 
