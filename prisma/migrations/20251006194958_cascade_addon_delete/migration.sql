@@ -1,17 +1,17 @@
 -- DropForeignKey
-ALTER TABLE `cartitemaddon` DROP FOREIGN KEY `CartItemAddon_addonId_fkey`;
+ALTER TABLE `Cartitemaddon` DROP FOREIGN KEY `CartItemAddon_addonId_fkey`;
 
 -- DropForeignKey
-ALTER TABLE `orderitemaddon` DROP FOREIGN KEY `OrderItemAddon_addonId_fkey`;
+ALTER TABLE `Orderitemaddon` DROP FOREIGN KEY `OrderItemAddon_addonId_fkey`;
 
 -- DropIndex
-DROP INDEX `CartItemAddon_addonId_fkey` ON `cartitemaddon`;
+DROP INDEX `CartItemAddon_addonId_fkey` ON `Cartitemaddon`;
 
 -- DropIndex
-DROP INDEX `OrderItemAddon_addonId_fkey` ON `orderitemaddon`;
+DROP INDEX `OrderItemAddon_addonId_fkey` ON `Orderitemaddon`;
 
 -- AlterTable
-ALTER TABLE `review` ALTER COLUMN `updatedAt` DROP DEFAULT;
+ALTER TABLE `Review` ALTER COLUMN `updatedAt` DROP DEFAULT;
 
 -- AddForeignKey
 ALTER TABLE `CartItemAddon` ADD CONSTRAINT `CartItemAddon_addonId_fkey` FOREIGN KEY (`addonId`) REFERENCES `ProductAddon`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
