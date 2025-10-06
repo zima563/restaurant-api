@@ -67,9 +67,11 @@ export class ProductService {
   }
 
   async update(id: number, dto: UpdateProductDto, newImageUrl?: string) {
+    // ✅ 1. تأكيد وجود المنتج
     const product = await this.prisma.product.findUnique({ where: { id } });
     if (!product) throw new NotFoundException('Product not found');
   
+    // ✅ 2. تأكيد الكاتيجوري لو موجودة
     if (dto.categoryId) {
       const category = await this.prisma.category.findUnique({
         where: { id: dto.categoryId },
@@ -77,26 +79,33 @@ export class ProductService {
       if (!category) throw new NotFoundException('Category not found');
     }
   
+    // ✅ 3. حذف الصورة القديمة لو فيه جديدة
     if (newImageUrl && product.imageUrl) {
       this.imageService.deleteImage(product.imageUrl);
     }
-
-    const { sizes, addons, ...productData } = dto;
   
-    // ✅ Update product basic info
+    const { sizes, addons, categoryId, ...productData } = dto;
+  
+    // ✅ 4. تحديث البيانات الأساسية للمنتج
     const updatedProduct = await this.prisma.product.update({
       where: { id },
       data: {
         ...productData,
         imageUrl: newImageUrl ?? product.imageUrl,
+        // ✅ تعديل العلاقة مع الكاتيجوري بالطريقة الصحيحة في Prisma
+        ...(categoryId && {
+          category: {
+            connect: { id: Number(categoryId) },
+          },
+        }),
       },
     });
   
-    // ✅ Update sizes (replace old with new if provided)
-    if (dto.sizes) {
+    // ✅ 5. تحديث الأحجام (sizes)
+    if (sizes) {
       await this.prisma.productSize.deleteMany({ where: { productId: id } });
       await this.prisma.productSize.createMany({
-        data: dto.sizes.map((s) => ({
+        data: sizes.map((s) => ({
           productId: id,
           name: s.name,
           price: s.price,
@@ -104,11 +113,11 @@ export class ProductService {
       });
     }
   
-    // ✅ Update addons (replace old with new if provided)
-    if (dto.addons) {
+    // ✅ 6. تحديث الإضافات (addons)
+    if (addons) {
       await this.prisma.productAddon.deleteMany({ where: { productId: id } });
       await this.prisma.productAddon.createMany({
-        data: dto.addons.map((a) => ({
+        data: addons.map((a) => ({
           productId: id,
           name: a.name,
           price: a.price,
@@ -116,6 +125,7 @@ export class ProductService {
       });
     }
   
+    // ✅ 7. إرجاع المنتج بعد التحديث
     return this.prisma.product.findUnique({
       where: { id },
       include: {
@@ -125,6 +135,7 @@ export class ProductService {
       },
     });
   }
+  
   
 
   async remove(id: number) {
