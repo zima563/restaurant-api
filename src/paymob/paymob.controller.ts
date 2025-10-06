@@ -6,9 +6,11 @@ import {
   BadRequestException,
   Query,
   Get,
+  Res
 } from '@nestjs/common';
 import { PaymobService } from './paymob.service';
 import { NotificationsService } from 'src/notification/notifications.service';
+import { Response } from 'express';
 
 @Controller('paymob')
 export class PaymobController {
@@ -23,7 +25,7 @@ export class PaymobController {
 
   @Get('callback')
   @HttpCode(200)
-  async handleCallback(@Query() query: any) {
+  async handleCallback(@Query() query: any, @Res() res:Response) {
     const isValid = this.paymobService.verifyHmac(query);
 
     if (!isValid) {
@@ -69,6 +71,6 @@ export class PaymobController {
       success,
     );
 
-    return { message: 'Callback received' };
+    return res.redirect('https://queen.kitchen/paymob/callback');
   }
 }
