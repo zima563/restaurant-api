@@ -1,14 +1,14 @@
 -- DropForeignKey
-ALTER TABLE `Cartitemaddon` DROP FOREIGN KEY `CartItemAddon_addonId_fkey`;
+ALTER TABLE `CartItemaddon` DROP FOREIGN KEY `CartItemAddon_addonId_fkey`;
 
 -- DropForeignKey
-ALTER TABLE `Orderitemaddon` DROP FOREIGN KEY `OrderItemAddon_addonId_fkey`;
+ALTER TABLE `OrderItemaddon` DROP FOREIGN KEY `OrderItemAddon_addonId_fkey`;
 
 -- DropIndex
-DROP INDEX `CartItemAddon_addonId_fkey` ON `Cartitemaddon`;
+DROP INDEX `CartItemAddon_addonId_fkey` ON `CartItemaddon`;
 
 -- DropIndex
-DROP INDEX `OrderItemAddon_addonId_fkey` ON `Orderitemaddon`;
+DROP INDEX `OrderItemAddon_addonId_fkey` ON `OrderItemaddon`;
 
 -- AlterTable
 ALTER TABLE `Review` ALTER COLUMN `updatedAt` DROP DEFAULT;
