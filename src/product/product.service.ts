@@ -115,15 +115,15 @@ export class ProductService {
   
     // ✅ 6. تحديث الإضافات (addons)
     if (dto.addons) {
-      await this.prisma.productAddon.deleteMany({ where: { productId: id } });
-      await this.prisma.productAddon.createMany({
-        data: dto.addons.map((a) => ({
-          productId: id,
-          name: a.name,
-          price: a.price,
-        })),
-      });
+      for (const a of dto.addons) {
+        await this.prisma.productAddon.upsert({
+          where: { id: (a as any).id ?? 0 }, // لو موجود حدثه، لو مش موجود أنشئه
+          update: { name: a.name, price: a.price },
+          create: { productId: id, name: a.name, price: a.price },
+        });
+      }
     }
+    
   
     // ✅ 7. إرجاع المنتج بعد التحديث
     return this.prisma.product.findUnique({
