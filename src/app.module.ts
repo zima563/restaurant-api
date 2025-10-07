@@ -20,6 +20,8 @@ import { NotificationsModule } from './notification/notification.module';
 import { NotificationsController } from './notification/notifications.controller';
 import { NotificationsService } from './notification/notifications.service';
 import { StatsModule } from './statics/stats.module';
+import { ServeStaticModule, serveStaticProviders } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -39,6 +41,9 @@ import { StatsModule } from './statics/stats.module';
     StatsModule,
     ConfigModule.forRoot({
       isGlobal: true, // 👈 يخليها متاحة في كل المشروع
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'build'), // path to React build
     }),
   ],
   controllers: [AppController, NotificationsController, PaymobController],
